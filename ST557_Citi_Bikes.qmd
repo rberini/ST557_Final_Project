@@ -4,3 +4,83 @@ author: "Robert Berini"
 format: html
 editor: visual
 ---
+
+## Introduction
+
+The Citi Bike program is a bike-sharing system in New York City that allows users to rent bicycles for short trips around the city. The program has become increasingly popular since its launch in 2013, with millions of rides taken each year. In this project, we will analyze Citi Bike trip data for 2018 to gain insights into usage patterns, popular routes, and user profiles.
+
+### Data Source
+
+The data for this analysis is sourced from the Citi Bike system's public data repository, which provides monthly trip data in CSV format. The dataset includes information such as trip duration, start and end stations, user type (subscriber or customer), and timestamps for each trip.
+
+### Data Dictionary
+
+-   `tripduration`: Duration of the trip in seconds
+-   `starttime`: Timestamp for when the trip started
+-   `stoptime`: Timestamp for when the trip ended
+-   `start station id`: Unique identifier for the starting station
+-   `start station name`: Name of the starting station
+-   `end station id`: Unique identifier for the ending station
+-   `end station name`: Name of the ending station
+-   `bikeid`: Unique identifier for the bike used
+-   `usertype`: Type of user (Subscriber or Customer)
+-   `birth year`: Birth year of the user
+-   `gender`: Gender of the user
+
+## Data Loading and Preparation
+
+Load required packages
+
+```{r}
+library(tidyverse)
+library(fs)
+library(vroom)
+library(broom)
+library(janitor)
+library(sf)
+```
+
+Load the Citi Bike data for 2018
+
+```{r}
+citibike_2018 <-
+  dir_ls("data/monthly_data", glob = "*.csv") |>
+  vroom()
+
+nrow(citibike_2018)
+head(citibike_2018)
+```
+
+Clean names and column types
+
+```{r}
+citibike_2018 <- citibike_2018 |>
+  clean_names() |>
+  mutate(
+    gender = factor(gender, levels = c(0, 1, 2), labels = c("Unknown", "Male", "Female")),
+    usertype = factor(usertype),
+    across(ends_with("id"), as.character)
+  )
+
+glimpse(citibike_2018)
+```
+## Create calculated variables
+```{r}
+citibike_2018 <- citibike_2018 |>
+  mutate(
+    day_of_week = lubridate::wday(starttime, label = TRUE),
+    weekday_weekend = factor(if_else(day_of_week %in% c("Sat", "Sun"), "Weekend", "Weekday")),
+    hour_of_day = lubridate::hour(starttime),
+    time_of_day = case_when(
+      hour_of_day >= 5 & hour_of_day < 9 ~ "Morning",
+      hour_of_day >= 9 & hour_of_day < 12 ~ "Late Morning",
+      hour_of_day >= 12 & hour_of_day < 17 ~ "Afternoon",
+      hour_of_day >= 17 & hour_of_day < 21 ~ "Evening",
+      TRUE ~ "Night"
+    ),
+    time_of_day = factor(time_of_day, levels = c("Morning", "Late Morning","Afternoon", "Evening", "Night")),
+    apprx_age = 2018 - birth_year,
+    round_trip = if_else(start_station_id == end_station_id, TRUE, FALSE)
+  )
+```
+
