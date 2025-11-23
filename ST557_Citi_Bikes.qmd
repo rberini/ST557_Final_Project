@@ -3,6 +3,9 @@ title: "Final Project: Citi Bikes"
 author: "Robert Berini"
 format: html
 editor: visual
+execute: 
+  warning: false
+  message: false
 ---
 
 ## Introduction
@@ -32,23 +35,34 @@ The data for this analysis is sourced from the Citi Bike system's public data re
 Load required packages
 
 ```{r}
+library(conflicted)
 library(tidyverse)
 library(fs)
 library(vroom)
-library(broom)
 library(janitor)
-library(sf)
+library(skimr)
+
+conflicts_prefer(dplyr::filter)
+
+options(
+  scipen = 999,
+  pillar.sigfig = 10
+  )
 ```
 
 Load the Citi Bike data for 2018
 
 ```{r}
 citibike_2018 <-
-  dir_ls("data/monthly_data", glob = "*.csv") |>
+  dir_ls("data/monthly", glob = "*.csv") |>
   vroom()
 
 nrow(citibike_2018)
 head(citibike_2018)
+```
+
+```{r}
+print(citibike_2018$`start station latitude`[1], digits = 15)
 ```
 
 Clean names and column types
@@ -64,12 +78,17 @@ citibike_2018 <- citibike_2018 |>
 
 glimpse(citibike_2018)
 ```
+
 ## Create calculated variables
+
 ```{r}
 citibike_2018 <- citibike_2018 |>
   mutate(
-    day_of_week = lubridate::wday(starttime, label = TRUE),
-    weekday_weekend = factor(if_else(day_of_week %in% c("Sat", "Sun"), "Weekend", "Weekday")),
+    tripduration_min = tripduration / 60,
+    day_of_week = wday(starttime, label = TRUE),
+    weekday_weekend = factor(if_else(
+      day_of_week %in% c("Sat", "Sun"), "Weekend", "Weekday"
+    )),
     hour_of_day = lubridate::hour(starttime),
     time_of_day = case_when(
       hour_of_day >= 5 & hour_of_day < 9 ~ "Morning",
@@ -78,9 +97,175 @@ citibike_2018 <- citibike_2018 |>
       hour_of_day >= 17 & hour_of_day < 21 ~ "Evening",
       TRUE ~ "Night"
     ),
-    time_of_day = factor(time_of_day, levels = c("Morning", "Late Morning","Afternoon", "Evening", "Night")),
-    apprx_age = 2018 - birth_year,
+    time_of_day = factor(
+      time_of_day,
+      levels = c("Morning", "Late Morning", "Afternoon", "Evening", "Night"),
+      ordered = TRUE
+    ),
+    approx_age = 2018 - birth_year,
     round_trip = if_else(start_station_id == end_station_id, TRUE, FALSE)
   )
 ```
 
+## Reorder columns for easier viewing
+
+```{r}
+citibike_2018 <- citibike_2018 |>
+  relocate(
+    starttime,
+    stoptime,
+    tripduration,
+    tripduration_min,
+    day_of_week,
+    weekday_weekend,
+    hour_of_day,
+    time_of_day,
+    start_station_id,
+    start_station_name,
+    start_station_latitude,
+    start_station_longitude,
+    end_station_id,
+    end_station_name,
+    end_station_latitude,
+    end_station_longitude,
+    round_trip,
+    bikeid,
+    usertype,
+    birth_year,
+    approx_age,
+    gender
+  )
+```
+
+## Exploratory data analysis
+
+### Summary parameters
+
+```{r}
+summary(citibike_2018)
+```
+
+```{r}
+citibike_2018 |>
+  skim()
+```
+
+### Trip duration density plot (excluding extreme values)
+
+```{r}
+citibike_2018 |>
+  filter(tripduration_min < 2880) |>
+  ggplot(aes(x = tripduration_min)) +
+  geom_density() +
+  labs(title = "Distribution of Trip Duration", 
+       x = "Duration (minutes)", 
+       y = "Density")
+```
+
+### Log scale for trip duration (excluding extreme values)
+
+```{r}
+citibike_2018 |>
+  filter(tripduration_min > 0 & tripduration_min < 2880) |>
+  ggplot(aes(x = log10(tripduration_min))) +
+  geom_density() +
+  labs(title = "Distribution of Trip Duration (Log Scale)", 
+       x = "Log Base 10 (Duration in minutes)", 
+       y = "Density")
+```
+
+### Age distribution
+
+```{r}
+ggplot(citibike_2018, aes(x = approx_age)) +
+  geom_density() +
+  labs(title = "Distribution of Age", 
+       x = "Age (years)", 
+       y = "Density") +
+  theme_minimal()
+```
+
+```{r}
+citibike_2018 |>
+  ggplot(aes(x = birth_year)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Distribution of Birth Years") +
+  theme_minimal()
+```
+
+```{r}
+citibike_2018 |>
+  count(birth_year, sort = TRUE) |>
+  slice(1) |>
+  pull(birth_year)
+```
+
+```{r}
+citibike_2018 |>
+  filter(
+    !is.na(round_trip),
+    !is.na(birth_year),
+    birth_year >= 1918,
+    tripduration_min <= 2880,
+    gender != "Unknown"
+  ) |>
+  ggplot(aes(x = birth_year)) +
+  geom_histogram(binwidth = 1) +
+  labs(title = "Distribution of Birth Years") +
+  theme_minimal()
+```
+
+```{r}
+citibike_2018 |>
+  filter(
+    !is.na(round_trip),
+    !is.na(birth_year),
+    birth_year >= 1918,
+    tripduration_min <= 2880,
+    gender != "Unknown"
+  ) |>
+  summary()
+```
+
+```{r}
+citibike_2018 |>
+  filter(
+    !is.na(round_trip),
+    !is.na(birth_year),
+    birth_year >= 1918,
+    tripduration_min <= 2880,
+    gender != "Unknown"
+  ) |>
+  skim()
+```
+
+## Save data and create sample
+
+```{r}
+write_csv(citibike_2018, "data/combined/citibike_2018_full.csv")
+write_rds(citibike_2018, "data/combined/citibike_2018_full.rds")
+write_csv(citibike_2018, "data/combined/citibike_2018_transformed.csv")
+write_rds(citibike_2018, "data/combined/citibike_2018_transformed.rds")
+```
+
+```{r}
+set.seed(557)
+
+citibike_sample_2018 <-
+  citibike_2018 |>
+  filter(
+    !is.na(round_trip),
+    !is.na(birth_year),
+    birth_year >= 1918,
+    tripduration_min <= 2880,
+    gender != "Unknown"
+  ) |>
+  slice_sample(n = 1000)
+```
+
+### Write sample to file
+
+```{r}
+write_csv(citibike_sample_2018, "data/sample/citibike_2018_sample_1000.csv")
+write_rds(citibike_sample_2018, "data/sample/citibike_2018_sample_1000.rds")
+```

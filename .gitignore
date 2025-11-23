@@ -5,4 +5,5 @@
 
 /.quarto/
 
-/data/monthly_data/
+/data/monthly/
+/data/combined/

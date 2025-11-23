@@ -1,0 +1,69 @@
+---
+title: "Final Project: Citi Bikes Sample"
+author: "Robert Berini"
+format: html
+editor: visual
+execute: 
+  warning: false
+  message: false
+---
+
+## Introduction
+
+The Citi Bike program is a bike-sharing system in New York City that allows users to rent bicycles for short trips around the city. The program has become increasingly popular since its launch in 2013, with millions of rides taken each year. In this project, we will analyze Citi Bike trip data for 2018 to gain insights into usage patterns, popular routes, and user profiles.
+
+### Data Source
+
+The data for this analysis is sourced from the Citi Bike system's public data repository, which provides monthly trip data in CSV format. The dataset includes information such as trip duration, start and end stations, user type (subscriber or customer), and timestamps for each trip.
+
+### Data Dictionary
+
+-   `starttime`: Timestamp for when the trip started (datetime)
+-   `stoptime`: Timestamp for when the trip ended (datetime)
+-   `tripduration`: Duration of the trip in seconds (numeric)
+-   `tripduration_min`: Duration of the trip in minutes (numeric, calculated from tripduration)
+-   `day_of_week`: Day of the week the trip started (ordered factor: Mon-Sun)
+-   `weekday_weekend`: Whether the trip occurred on a weekday or weekend (factor)
+-   `hour_of_day`: Hour of day when the trip started, 0-23 (integer)
+-   `time_of_day`: Time period classification (ordered factor: Morning, Late Morning, Afternoon, Evening, Night)
+-   `start_station_id`: Unique identifier for the starting station (character)
+-   `start_station_name`: Name of the starting station (character)
+-   `start_station_latitude`: Latitude coordinate of the starting station (numeric)
+-   `start_station_longitude`: Longitude coordinate of the starting station (numeric)
+-   `end_station_id`: Unique identifier for the ending station (character)
+-   `end_station_name`: Name of the ending station (character)
+-   `end_station_latitude`: Latitude coordinate of the ending station (numeric)
+-   `end_station_longitude`: Longitude coordinate of the ending station (numeric)
+-   `round_trip`: Whether the trip started and ended at the same station (logical: TRUE/FALSE)
+-   `bikeid`: Unique identifier for the bike used (character)
+-   `usertype`: Type of user (factor: Subscriber or Customer)
+-   `birth_year`: Self-reported birth year of the user (numeric)
+-   `approx_age`: Approximate age of the user in 2018 (numeric, calculated as 2018 - birth_year)
+-   `gender`: Self-reported gender of the user (factor: Male, Female, Unknown)
+
+## Data Loading and Preparation
+
+Load required packages
+
+```{r}
+library(conflicted)
+library(tidyverse)
+library(janitor)
+library(skimr)
+
+conflicts_prefer(dplyr::filter)
+
+options(
+  scipen = 999,
+  pillar.sigfig = 10
+  )
+```
+
+Load the Citi Bike 2018 data sample
+
+```{r}
+citibike_sample_2018 <-
+  readRDS("data/sample/citibike_2018_sample_1000.rds")
+
+glimpse(citibike_sample_2018)
+```

@@ -1,3 +1,6 @@
 project:
   type: website
   output-dir: docs
+  render:
+  - ST557_Citi_Bikes.qmd
+  - ST557_Citi_Bikes_Sample.qmd
