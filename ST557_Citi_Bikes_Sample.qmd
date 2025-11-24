@@ -49,7 +49,10 @@ Load required packages
 library(conflicted)
 library(tidyverse)
 library(janitor)
+library(broom)
 library(skimr)
+library(psych)
+library(infer)
 
 conflicts_prefer(dplyr::filter)
 
@@ -59,6 +62,12 @@ options(
   )
 ```
 
+Load the full transformed Citi Bike 2018 data (for reference)
+
+```{r}
+citibike_2018 <- readRDS("data/combined/citibike_2018_transformed.rds")
+```
+
 Load the Citi Bike 2018 data sample
 
 ```{r}
@@ -66,4 +75,181 @@ citibike_sample_2018 <-
   readRDS("data/sample/citibike_2018_sample_1000.rds")
 
 glimpse(citibike_sample_2018)
+```
+
+## Exploratory data analysis
+
+### Summary statistics
+
+```{r}
+citibike_sample_2018 |>
+  summary()
+```
+
+```{r}
+citibike_sample_2018 |>
+  skim()
+```
+
+### Trip duration analysis
+
+```{r}
+citibike_sample_2018 |>
+  select(tripduration_min) |>
+  describe()
+```
+
+```{r}
+citibike_sample_2018 |>
+  ggplot(aes(x = tripduration_min)) +
+  geom_density() +
+  labs(
+    title = "Distribution of Trip Durations",
+    x = "Trip Duration (minutes)",
+    y = "Density"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+citibike_sample_2018 |>
+  ggplot(aes(x = tripduration_min)) +
+  geom_density() +
+  labs(
+    title = "Distribution of Trip Durations",
+    x = "Trip Duration (minutes)",
+    y = "Density"
+  ) +
+  xlim(0, 60) +
+  theme_minimal()
+```
+
+### Bootstrap confidence interval for mean trip duration
+
+```{r}
+set.seed(557)
+
+citibike_sample_2018 |>
+  slice_sample(n = nrow(citibike_sample_2018), replace = TRUE) |>
+  pull(tripduration_min) |>
+  mean(na.rm = TRUE)
+```
+
+```{r}
+set.seed(557)
+
+boot_dist_1 <- citibike_sample_2018 |>
+  specify(response = tripduration_min) |>
+  generate(reps = 1, type = "bootstrap") |>
+  calculate(stat = "mean")
+
+print(boot_dist_1)
+
+boot_dist_1 |>
+  ggplot(aes(x = stat)) +
+  geom_dotplot(binwidth = 0.1) +
+  theme_minimal() +
+  xlim(10, 16) +
+  labs(x = "Bootstrap Mean Trip Duration", y = "") +
+  theme(axis.text.y = element_blank(),
+      axis.ticks.y = element_blank())
+```
+
+```{r}
+set.seed(557)
+
+boot_dist_10 <- citibike_sample_2018 |>
+  specify(response = tripduration_min) |>
+  generate(reps = 10, type = "bootstrap") |>
+  calculate(stat = "mean")
+
+print(boot_dist_10)
+
+boot_dist_10 |>
+  ggplot(aes(x = stat)) +
+  geom_dotplot(binwidth = 0.1) +
+  theme_minimal() +
+  xlim(10, 16) +
+  labs(x = "Bootstrap Mean Trip Duration", y = "") +
+  theme(axis.text.y = element_blank(),
+      axis.ticks.y = element_blank())
+```
+
+```{r}
+set.seed(557)
+
+boot_dist_1000 <- citibike_sample_2018 |>
+  specify(response = tripduration_min) |>
+  generate(reps = 1000, type = "bootstrap") |>
+  calculate(stat = "mean")
+
+boot_dist_1000 |>
+  ggplot(aes(x = stat)) +
+  geom_dotplot(binwidth = 0.1, dotsize = .45) +
+  theme_minimal() +
+  xlim(10, 16) +
+  labs(x = "Bootstrap Mean Trip Duration", y = "") +
+  theme(axis.text.y = element_blank(),
+      axis.ticks.y = element_blank())
+```
+
+```{r}
+boot_ci <- boot_dist_1000 |>
+  get_confidence_interval(level = 0.95, type = "percentile")
+
+print(boot_ci)
+
+boot_dist_1000 |>
+  visualize(bins = 100) +
+  shade_confidence_interval(endpoints = boot_ci) +
+  theme_minimal() +
+  xlim(10, 16) +
+  labs(x = "Bootstrap Mean Trip Duration", y = "") +
+  theme(axis.text.y = element_blank(),
+      axis.ticks.y = element_blank())
+```
+
+### Mathematical confidence interval for mean trip duration
+
+```{r}
+citibike_sample_2018 |>
+  select(tripduration_min) |>
+  t.test(conf.level = 0.95) |>
+  tidy()
+```
+
+### Comparison of bootstrap and mathematical confidence intervals
+
+```{r}
+pop_mean <- mean(citibike_2018$tripduration_min, na.rm = TRUE)
+
+boot_mean <- mean(boot_dist_1000$stat)
+
+t_result <- citibike_sample_2018 |>
+  select(tripduration_min) |>
+  t.test(conf.level = 0.95) |>
+  tidy()
+
+tibble(
+  Method = c("Population (True)", "Bootstrap", "T-test"),
+  Mean = c(pop_mean, boot_mean, t_result$estimate),
+  Lower_CI = c(NA, boot_ci$lower_ci, t_result$conf.low),
+  Upper_CI = c(NA, boot_ci$upper_ci, t_result$conf.high)
+)
+```
+
+### Bivariate analysis: Trip duration by user type
+
+```{r}
+citibike_sample_2018 |>
+  ggplot(aes(x = tripduration_min, fill = usertype)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Distribution of Trip Durations by User Type",
+    x = "Trip Duration (minutes)",
+    y = "Density",
+    fill = "User Type"
+  ) +
+  xlim(0, 60) +
+  theme_minimal()
 ```

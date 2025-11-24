@@ -53,22 +53,18 @@ options(
 Load the Citi Bike data for 2018
 
 ```{r}
-citibike_2018 <-
+citibike_2018_raw <-
   dir_ls("data/monthly", glob = "*.csv") |>
   vroom()
 
-nrow(citibike_2018)
-head(citibike_2018)
-```
-
-```{r}
-print(citibike_2018$`start station latitude`[1], digits = 15)
+nrow(citibike_2018_raw)
+head(citibike_2018_raw)
 ```
 
 Clean names and column types
 
 ```{r}
-citibike_2018 <- citibike_2018 |>
+citibike_2018 <- citibike_2018_raw |>
   clean_names() |>
   mutate(
     gender = factor(gender, levels = c(0, 1, 2), labels = c("Unknown", "Male", "Female")),
@@ -162,16 +158,19 @@ citibike_2018 |>
        y = "Density")
 ```
 
-### Log scale for trip duration (excluding extreme values)
+### Zoom in on trip duration
 
 ```{r}
 citibike_2018 |>
-  filter(tripduration_min > 0 & tripduration_min < 2880) |>
-  ggplot(aes(x = log10(tripduration_min))) +
+  ggplot(aes(x = tripduration_min)) +
   geom_density() +
-  labs(title = "Distribution of Trip Duration (Log Scale)", 
-       x = "Log Base 10 (Duration in minutes)", 
-       y = "Density")
+  labs(
+    title = "Distribution of Trip Durations",
+    x = "Trip Duration (minutes)",
+    y = "Density"
+  ) +
+  xlim(0, 60) +
+  theme_minimal()
 ```
 
 ### Age distribution
@@ -239,11 +238,23 @@ citibike_2018 |>
   skim()
 ```
 
+```{r}
+citibike_2018 <-
+  citibike_2018 |>
+  filter(
+    !is.na(round_trip),
+    !is.na(birth_year),
+    birth_year >= 1918,
+    tripduration_min <= 2880,
+    gender != "Unknown"
+  )
+```
+
 ## Save data and create sample
 
 ```{r}
-write_csv(citibike_2018, "data/combined/citibike_2018_full.csv")
-write_rds(citibike_2018, "data/combined/citibike_2018_full.rds")
+write_csv(citibike_2018_raw, "data/combined/citibike_2018_full.csv")
+write_rds(citibike_2018_raw, "data/combined/citibike_2018_full.rds")
 write_csv(citibike_2018, "data/combined/citibike_2018_transformed.csv")
 write_rds(citibike_2018, "data/combined/citibike_2018_transformed.rds")
 ```
@@ -253,13 +264,6 @@ set.seed(557)
 
 citibike_sample_2018 <-
   citibike_2018 |>
-  filter(
-    !is.na(round_trip),
-    !is.na(birth_year),
-    birth_year >= 1918,
-    tripduration_min <= 2880,
-    gender != "Unknown"
-  ) |>
   slice_sample(n = 1000)
 ```
 
