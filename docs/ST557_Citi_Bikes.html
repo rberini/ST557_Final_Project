@@ -100,8 +100,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet">
 
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="fullcontent">
@@ -173,14 +177,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vroom)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">conflicts_prefer</span>(dplyr<span class="sc">::</span>filter)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">scipen =</span> <span class="dv">999</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">pillar.sigfig =</span> <span class="dv">10</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(urbnthemes)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">conflicts_prefer</span>(dplyr<span class="sc">::</span>filter)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">scipen =</span> <span class="dv">999</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">pillar.sigfig =</span> <span class="dv">10</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set_urbn_defaults</span>(<span class="at">style =</span> <span class="st">"print"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Load the Citi Bike data for 2018</p>
 <div class="cell">
@@ -250,26 +257,28 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="ot">&lt;-</span> citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">tripduration_min =</span> tripduration <span class="sc">/</span> <span class="dv">60</span>,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">day_of_week =</span> <span class="fu">wday</span>(starttime, <span class="at">label =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">weekday_weekend =</span> <span class="fu">factor</span>(<span class="fu">if_else</span>(</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>      day_of_week <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Sat"</span>, <span class="st">"Sun"</span>), <span class="st">"Weekend"</span>, <span class="st">"Weekday"</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    )),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">hour_of_day =</span> lubridate<span class="sc">::</span><span class="fu">hour</span>(starttime),</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_of_day =</span> <span class="fu">case_when</span>(</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>      hour_of_day <span class="sc">&gt;=</span> <span class="dv">5</span> <span class="sc">&amp;</span> hour_of_day <span class="sc">&lt;</span> <span class="dv">9</span> <span class="sc">~</span> <span class="st">"Morning"</span>,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      hour_of_day <span class="sc">&gt;=</span> <span class="dv">9</span> <span class="sc">&amp;</span> hour_of_day <span class="sc">&lt;</span> <span class="dv">12</span> <span class="sc">~</span> <span class="st">"Late Morning"</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      hour_of_day <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> hour_of_day <span class="sc">&lt;</span> <span class="dv">17</span> <span class="sc">~</span> <span class="st">"Afternoon"</span>,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      hour_of_day <span class="sc">&gt;=</span> <span class="dv">17</span> <span class="sc">&amp;</span> hour_of_day <span class="sc">&lt;</span> <span class="dv">21</span> <span class="sc">~</span> <span class="st">"Evening"</span>,</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Night"</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_of_day =</span> <span class="fu">factor</span>(</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>      time_of_day,</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Morning"</span>, <span class="st">"Late Morning"</span>, <span class="st">"Afternoon"</span>, <span class="st">"Evening"</span>, <span class="st">"Night"</span>),</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">ordered =</span> <span class="cn">TRUE</span></span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">approx_age =</span> <span class="dv">2018</span> <span class="sc">-</span> birth_year,</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">round_trip =</span> <span class="fu">if_else</span>(start_station_id <span class="sc">==</span> end_station_id, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">month =</span> <span class="fu">month</span>(starttime, <span class="at">label =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">day_of_week =</span> <span class="fu">wday</span>(starttime, <span class="at">label =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">weekday_weekend =</span> <span class="fu">factor</span>(<span class="fu">if_else</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      day_of_week <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Sat"</span>, <span class="st">"Sun"</span>), <span class="st">"Weekend"</span>, <span class="st">"Weekday"</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    )),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">hour_of_day =</span> <span class="fu">hour</span>(starttime),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_of_day =</span> <span class="fu">case_when</span>(</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      hour_of_day <span class="sc">&gt;=</span> <span class="dv">5</span> <span class="sc">&amp;</span> hour_of_day <span class="sc">&lt;</span> <span class="dv">9</span> <span class="sc">~</span> <span class="st">"Morning"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      hour_of_day <span class="sc">&gt;=</span> <span class="dv">9</span> <span class="sc">&amp;</span> hour_of_day <span class="sc">&lt;</span> <span class="dv">12</span> <span class="sc">~</span> <span class="st">"Late Morning"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      hour_of_day <span class="sc">&gt;=</span> <span class="dv">12</span> <span class="sc">&amp;</span> hour_of_day <span class="sc">&lt;</span> <span class="dv">17</span> <span class="sc">~</span> <span class="st">"Afternoon"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      hour_of_day <span class="sc">&gt;=</span> <span class="dv">17</span> <span class="sc">&amp;</span> hour_of_day <span class="sc">&lt;</span> <span class="dv">21</span> <span class="sc">~</span> <span class="st">"Evening"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Night"</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">time_of_day =</span> <span class="fu">factor</span>(</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>      time_of_day,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Morning"</span>, <span class="st">"Late Morning"</span>, <span class="st">"Afternoon"</span>, <span class="st">"Evening"</span>, <span class="st">"Night"</span>),</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">ordered =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">approx_age =</span> <span class="dv">2018</span> <span class="sc">-</span> birth_year,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">round_trip =</span> <span class="fu">if_else</span>(start_station_id <span class="sc">==</span> end_station_id, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>),</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">usertype =</span> <span class="fu">fct_rev</span>(usertype)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="reorder-columns-for-easier-viewing" class="level2">
@@ -277,29 +286,30 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="ot">&lt;-</span> citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    starttime,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    stoptime,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    tripduration,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    tripduration_min,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    day_of_week,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    weekday_weekend,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    hour_of_day,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    time_of_day,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    start_station_id,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    start_station_name,</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    start_station_latitude,</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    start_station_longitude,</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    end_station_id,</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    end_station_name,</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    end_station_latitude,</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    end_station_longitude,</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    round_trip,</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    bikeid,</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    usertype,</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    birth_year,</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    approx_age,</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    gender</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    tripduration,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    tripduration_min,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    starttime,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    stoptime,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    month,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    day_of_week,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    weekday_weekend,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    hour_of_day,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    time_of_day,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    start_station_id,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    start_station_name,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    start_station_latitude,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    start_station_longitude,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    end_station_id,</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    end_station_name,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    end_station_latitude,</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    end_station_longitude,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    round_trip,</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    bikeid,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    usertype,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    birth_year,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    approx_age,</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    gender</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exploratory-data-analysis" class="level2">
@@ -309,62 +319,62 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(citibike_2018)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   starttime                      stoptime                  
- Min.   :2018-01-01 00:01:50   Min.   :2018-01-01 00:05:07  
- 1st Qu.:2018-05-08 21:14:05   1st Qu.:2018-05-08 21:31:18  
- Median :2018-07-19 16:46:36   Median :2018-07-19 17:03:37  
- Mean   :2018-07-16 04:41:19   Mean   :2018-07-16 04:57:48  
- 3rd Qu.:2018-09-27 14:52:05   3rd Qu.:2018-09-27 15:07:04  
- Max.   :2018-12-31 23:59:51   Max.   :2019-01-08 08:39:45  
-                                                            
-  tripduration        tripduration_min    day_of_week   weekday_weekend   
- Min.   :      61.0   Min.   :     1.02   Sun:1985040   Weekday:13313043  
- 1st Qu.:     358.0   1st Qu.:     5.97   Mon:2535365   Weekend: 4235296  
- Median :     605.0   Median :    10.08   Tue:2699319                     
- Mean   :     988.7   Mean   :    16.48   Wed:2737696                     
- 3rd Qu.:    1060.0   3rd Qu.:    17.67   Thu:2738252                     
- Max.   :19510049.0   Max.   :325167.48   Fri:2602411                     
-                                          Sat:2250256                     
-  hour_of_day          time_of_day      start_station_id   start_station_name
- Min.   : 0.00   Morning     :2716502   Length:17548339    Length:17548339   
- 1st Qu.:10.00   Late Morning:2724474   Class :character   Class :character  
- Median :15.00   Afternoon   :5302883   Mode  :character   Mode  :character  
- Mean   :13.89   Evening     :5234605                                        
- 3rd Qu.:18.00   Night       :1569875                                        
- Max.   :23.00                                                               
+<pre><code>  tripduration        tripduration_min      starttime                  
+ Min.   :      61.0   Min.   :     1.02   Min.   :2018-01-01 00:01:50  
+ 1st Qu.:     358.0   1st Qu.:     5.97   1st Qu.:2018-05-08 21:14:05  
+ Median :     605.0   Median :    10.08   Median :2018-07-19 16:46:36  
+ Mean   :     988.7   Mean   :    16.48   Mean   :2018-07-16 04:41:19  
+ 3rd Qu.:    1060.0   3rd Qu.:    17.67   3rd Qu.:2018-09-27 14:52:05  
+ Max.   :19510049.0   Max.   :325167.48   Max.   :2018-12-31 23:59:51  
+                                                                       
+    stoptime                       month         day_of_week  
+ Min.   :2018-01-01 00:05:07   Aug    :1977177   Sun:1985040  
+ 1st Qu.:2018-05-08 21:31:18   Jun    :1953103   Mon:2535365  
+ Median :2018-07-19 17:03:37   Jul    :1913625   Tue:2699319  
+ Mean   :2018-07-16 04:57:48   Oct    :1878657   Wed:2737696  
+ 3rd Qu.:2018-09-27 15:07:04   Sep    :1877884   Thu:2738252  
+ Max.   :2019-01-08 08:39:45   May    :1824710   Fri:2602411  
+                               (Other):6123183   Sat:2250256  
+ weekday_weekend     hour_of_day          time_of_day      start_station_id  
+ Weekday:13313043   Min.   : 0.00   Morning     :2716502   Length:17548339   
+ Weekend: 4235296   1st Qu.:10.00   Late Morning:2724474   Class :character  
+                    Median :15.00   Afternoon   :5302883   Mode  :character  
+                    Mean   :13.89   Evening     :5234605                     
+                    3rd Qu.:18.00   Night       :1569875                     
+                    Max.   :23.00                                            
                                                                              
- start_station_latitude start_station_longitude end_station_id    
- Min.   :40.65          Min.   :-74.03          Length:17548339   
- 1st Qu.:40.72          1st Qu.:-74.00          Class :character  
- Median :40.74          Median :-73.99          Mode  :character  
- Mean   :40.74          Mean   :-73.98                            
- 3rd Qu.:40.76          3rd Qu.:-73.97                            
- Max.   :45.51          Max.   :-73.57                            
+ start_station_name start_station_latitude start_station_longitude
+ Length:17548339    Min.   :40.65          Min.   :-74.03         
+ Class :character   1st Qu.:40.72          1st Qu.:-74.00         
+ Mode  :character   Median :40.74          Median :-73.99         
+                    Mean   :40.74          Mean   :-73.98         
+                    3rd Qu.:40.76          3rd Qu.:-73.97         
+                    Max.   :45.51          Max.   :-73.57         
                                                                   
- end_station_name   end_station_latitude end_station_longitude round_trip      
- Length:17548339    Min.   :40.65        Min.   :-74.08        Mode :logical   
- Class :character   1st Qu.:40.72        1st Qu.:-74.00        FALSE:17198742  
- Mode  :character   Median :40.74        Median :-73.99        TRUE :347100    
-                    Mean   :40.74        Mean   :-73.98        NA's :2497      
-                    3rd Qu.:40.76        3rd Qu.:-73.97                        
-                    Max.   :45.51        Max.   :-73.57                        
-                                                                               
-    bikeid                usertype          birth_year     approx_age    
- Length:17548339    Customer  : 1933514   Min.   :1885   Min.   : 16.00  
- Class :character   Subscriber:15614825   1st Qu.:1969   1st Qu.: 29.00  
- Mode  :character                         Median :1981   Median : 37.00  
-                                          Mean   :1979   Mean   : 39.01  
-                                          3rd Qu.:1989   3rd Qu.: 49.00  
-                                          Max.   :2002   Max.   :133.00  
-                                                                         
-     gender        
- Unknown: 1484555  
- Male   :11971322  
- Female : 4092462  
-                   
-                   
-                   
-                   </code></pre>
+ end_station_id     end_station_name   end_station_latitude
+ Length:17548339    Length:17548339    Min.   :40.65       
+ Class :character   Class :character   1st Qu.:40.72       
+ Mode  :character   Mode  :character   Median :40.74       
+                                       Mean   :40.74       
+                                       3rd Qu.:40.76       
+                                       Max.   :45.51       
+                                                           
+ end_station_longitude round_trip          bikeid         
+ Min.   :-74.08        Mode :logical    Length:17548339   
+ 1st Qu.:-74.00        FALSE:17198742   Class :character  
+ Median :-73.99        TRUE :347100     Mode  :character  
+ Mean   :-73.98        NA's :2497                         
+ 3rd Qu.:-73.97                                           
+ Max.   :-73.57                                           
+                                                          
+       usertype          birth_year     approx_age         gender        
+ Subscriber:15614825   Min.   :1885   Min.   : 16.00   Unknown: 1484555  
+ Customer  : 1933514   1st Qu.:1969   1st Qu.: 29.00   Male   :11971322  
+                       Median :1981   Median : 37.00   Female : 4092462  
+                       Mean   :1979   Mean   : 39.01                     
+                       3rd Qu.:1989   3rd Qu.: 49.00                     
+                       Max.   :2002   Max.   :133.00                     
+                                                                         </code></pre>
 </div>
 </div>
 <div class="cell">
@@ -384,7 +394,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Number of columns</td>
-<td style="text-align: left;">22</td>
+<td style="text-align: left;">23</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">_______________________</td>
@@ -400,7 +410,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </tr>
 <tr class="odd">
 <td style="text-align: left;">factor</td>
-<td style="text-align: left;">5</td>
+<td style="text-align: left;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">logical</td>
@@ -523,6 +533,14 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: left;">month</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">Aug: 1977177, Jun: 1953103, Jul: 1913625, Oct: 1878657</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">day_of_week</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -530,7 +548,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <td style="text-align: right;">7</td>
 <td style="text-align: left;">Thu: 2738252, Wed: 2737696, Tue: 2699319, Fri: 2602411</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">weekday_weekend</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -538,7 +556,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">Wee: 13313043, Wee: 4235296</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">time_of_day</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -546,7 +564,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">Aft: 5302883, Eve: 5234605, Lat: 2724474, Mor: 2716502</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">usertype</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -554,7 +572,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">Sub: 15614825, Cus: 1933514</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">gender</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -901,62 +919,62 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   starttime                      stoptime                    tripduration     
- Min.   :2018-01-01 00:01:50   Min.   :2018-01-01 00:05:07   Min.   :    61.0  
- 1st Qu.:2018-05-08 08:34:52   1st Qu.:2018-05-08 08:49:09   1st Qu.:   347.0  
- Median :2018-07-20 08:25:19   Median :2018-07-20 08:39:03   Median :   575.0  
- Mean   :2018-07-16 10:52:59   Mean   :2018-07-16 11:06:12   Mean   :   792.7  
- 3rd Qu.:2018-09-29 12:32:19   3rd Qu.:2018-09-29 12:48:56   3rd Qu.:   984.0  
- Max.   :2018-12-31 23:59:51   Max.   :2019-01-02 13:22:10   Max.   :172782.0  
-                                                                               
- tripduration_min   day_of_week   weekday_weekend     hour_of_day   
- Min.   :   1.017   Sun:1707997   Weekday:12416463   Min.   : 0.00  
- 1st Qu.:   5.783   Mon:2351737   Weekend: 3634055   1st Qu.:10.00  
- Median :   9.583   Tue:2535709                      Median :14.00  
- Mean   :  13.212   Wed:2565781                      Mean   :13.85  
- 3rd Qu.:  16.400   Thu:2560931                      3rd Qu.:18.00  
- Max.   :2879.700   Fri:2402305                      Max.   :23.00  
-                    Sat:1926058                                     
-       time_of_day      start_station_id   start_station_name
- Morning     :2634345   Length:16050518    Length:16050518   
- Late Morning:2483236   Class :character   Class :character  
- Afternoon   :4646409   Mode  :character   Mode  :character  
- Evening     :4845483                                        
- Night       :1441045                                        
-                                                             
-                                                             
- start_station_latitude start_station_longitude end_station_id    
- Min.   :40.65          Min.   :-74.03          Length:16050518   
- 1st Qu.:40.72          1st Qu.:-74.00          Class :character  
- Median :40.74          Median :-73.99          Mode  :character  
- Mean   :40.74          Mean   :-73.98                            
- 3rd Qu.:40.76          3rd Qu.:-73.97                            
- Max.   :45.51          Max.   :-73.57                            
+<pre><code>  tripduration      tripduration_min     starttime                  
+ Min.   :    61.0   Min.   :   1.017   Min.   :2018-01-01 00:01:50  
+ 1st Qu.:   347.0   1st Qu.:   5.783   1st Qu.:2018-05-08 08:34:52  
+ Median :   575.0   Median :   9.583   Median :2018-07-20 08:25:19  
+ Mean   :   792.7   Mean   :  13.212   Mean   :2018-07-16 10:52:59  
+ 3rd Qu.:   984.0   3rd Qu.:  16.400   3rd Qu.:2018-09-29 12:32:19  
+ Max.   :172782.0   Max.   :2879.700   Max.   :2018-12-31 23:59:51  
+                                                                    
+    stoptime                       month         day_of_week  
+ Min.   :2018-01-01 00:05:07   Aug    :1769633   Sun:1707997  
+ 1st Qu.:2018-05-08 08:49:09   Oct    :1752022   Mon:2351737  
+ Median :2018-07-20 08:39:03   Jun    :1749891   Tue:2535709  
+ Mean   :2018-07-16 11:06:12   Sep    :1702898   Wed:2565781  
+ 3rd Qu.:2018-09-29 12:48:56   Jul    :1701736   Thu:2560931  
+ Max.   :2019-01-02 13:22:10   May    :1623528   Fri:2402305  
+                               (Other):5750810   Sat:1926058  
+ weekday_weekend     hour_of_day          time_of_day      start_station_id  
+ Weekday:12416463   Min.   : 0.00   Morning     :2634345   Length:16050518   
+ Weekend: 3634055   1st Qu.:10.00   Late Morning:2483236   Class :character  
+                    Median :14.00   Afternoon   :4646409   Mode  :character  
+                    Mean   :13.85   Evening     :4845483                     
+                    3rd Qu.:18.00   Night       :1441045                     
+                    Max.   :23.00                                            
+                                                                             
+ start_station_name start_station_latitude start_station_longitude
+ Length:16050518    Min.   :40.65          Min.   :-74.03         
+ Class :character   1st Qu.:40.72          1st Qu.:-74.00         
+ Mode  :character   Median :40.74          Median :-73.99         
+                    Mean   :40.74          Mean   :-73.98         
+                    3rd Qu.:40.76          3rd Qu.:-73.97         
+                    Max.   :45.51          Max.   :-73.57         
                                                                   
- end_station_name   end_station_latitude end_station_longitude round_trip      
- Length:16050518    Min.   :40.65        Min.   :-74.08        Mode :logical   
- Class :character   1st Qu.:40.72        1st Qu.:-74.00        FALSE:15785257  
- Mode  :character   Median :40.74        Median :-73.99        TRUE :265261    
-                    Mean   :40.74        Mean   :-73.98                        
-                    3rd Qu.:40.76        3rd Qu.:-73.97                        
-                    Max.   :45.51        Max.   :-73.57                        
-                                                                               
-    bikeid                usertype          birth_year     approx_age    
- Length:16050518    Customer  :  752013   Min.   :1918   Min.   : 16.00  
- Class :character   Subscriber:15298505   1st Qu.:1972   1st Qu.: 29.00  
- Mode  :character                         Median :1983   Median : 35.00  
-                                          Mean   :1980   Mean   : 38.11  
-                                          3rd Qu.:1989   3rd Qu.: 46.00  
-                                          Max.   :2002   Max.   :100.00  
-                                                                         
-     gender        
- Unknown:       0  
- Male   :11959708  
- Female : 4090810  
-                   
-                   
-                   
-                   </code></pre>
+ end_station_id     end_station_name   end_station_latitude
+ Length:16050518    Length:16050518    Min.   :40.65       
+ Class :character   Class :character   1st Qu.:40.72       
+ Mode  :character   Mode  :character   Median :40.74       
+                                       Mean   :40.74       
+                                       3rd Qu.:40.76       
+                                       Max.   :45.51       
+                                                           
+ end_station_longitude round_trip          bikeid         
+ Min.   :-74.08        Mode :logical    Length:16050518   
+ 1st Qu.:-74.00        FALSE:15785257   Class :character  
+ Median :-73.99        TRUE :265261     Mode  :character  
+ Mean   :-73.98                                           
+ 3rd Qu.:-73.97                                           
+ Max.   :-73.57                                           
+                                                          
+       usertype          birth_year     approx_age         gender        
+ Subscriber:15298505   Min.   :1918   Min.   : 16.00   Unknown:       0  
+ Customer  :  752013   1st Qu.:1972   1st Qu.: 29.00   Male   :11959708  
+                       Median :1983   Median : 35.00   Female : 4090810  
+                       Mean   :1980   Mean   : 38.11                     
+                       3rd Qu.:1989   3rd Qu.: 46.00                     
+                       Max.   :2002   Max.   :100.00                     
+                                                                         </code></pre>
 </div>
 </div>
 <div class="cell">
@@ -983,7 +1001,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Number of columns</td>
-<td style="text-align: left;">22</td>
+<td style="text-align: left;">23</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">_______________________</td>
@@ -999,7 +1017,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </tr>
 <tr class="odd">
 <td style="text-align: left;">factor</td>
-<td style="text-align: left;">5</td>
+<td style="text-align: left;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">logical</td>
@@ -1122,6 +1140,14 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: left;">month</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">TRUE</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">Aug: 1769633, Oct: 1752022, Jun: 1749891, Sep: 1702898</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">day_of_week</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -1129,7 +1155,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <td style="text-align: right;">7</td>
 <td style="text-align: left;">Wed: 2565781, Thu: 2560931, Tue: 2535709, Fri: 2402305</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">weekday_weekend</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -1137,7 +1163,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">Wee: 12416463, Wee: 3634055</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">time_of_day</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -1145,7 +1171,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <td style="text-align: right;">5</td>
 <td style="text-align: left;">Eve: 4845483, Aft: 4646409, Mor: 2634345, Lat: 2483236</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">usertype</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>
@@ -1153,7 +1179,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">Sub: 15298505, Cus: 752013</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">gender</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">1</td>

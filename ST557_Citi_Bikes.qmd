@@ -40,6 +40,7 @@ library(tidyverse)
 library(fs)
 library(vroom)
 library(janitor)
+library(urbnthemes)
 library(skimr)
 
 conflicts_prefer(dplyr::filter)
@@ -48,6 +49,8 @@ options(
   scipen = 999,
   pillar.sigfig = 10
   )
+
+set_urbn_defaults(style = "print")
 ```
 
 Load the Citi Bike data for 2018
@@ -81,11 +84,12 @@ glimpse(citibike_2018)
 citibike_2018 <- citibike_2018 |>
   mutate(
     tripduration_min = tripduration / 60,
+    month = month(starttime, label = TRUE),
     day_of_week = wday(starttime, label = TRUE),
     weekday_weekend = factor(if_else(
       day_of_week %in% c("Sat", "Sun"), "Weekend", "Weekday"
     )),
-    hour_of_day = lubridate::hour(starttime),
+    hour_of_day = hour(starttime),
     time_of_day = case_when(
       hour_of_day >= 5 & hour_of_day < 9 ~ "Morning",
       hour_of_day >= 9 & hour_of_day < 12 ~ "Late Morning",
@@ -99,7 +103,8 @@ citibike_2018 <- citibike_2018 |>
       ordered = TRUE
     ),
     approx_age = 2018 - birth_year,
-    round_trip = if_else(start_station_id == end_station_id, TRUE, FALSE)
+    round_trip = if_else(start_station_id == end_station_id, TRUE, FALSE),
+    usertype = fct_rev(usertype)
   )
 ```
 
@@ -108,10 +113,11 @@ citibike_2018 <- citibike_2018 |>
 ```{r}
 citibike_2018 <- citibike_2018 |>
   relocate(
-    starttime,
-    stoptime,
     tripduration,
     tripduration_min,
+    starttime,
+    stoptime,
+    month,
     day_of_week,
     weekday_weekend,
     hour_of_day,

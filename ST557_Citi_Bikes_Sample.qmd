@@ -49,17 +49,23 @@ Load required packages
 library(conflicted)
 library(tidyverse)
 library(janitor)
+library(urbnthemes)
 library(broom)
 library(skimr)
 library(psych)
 library(infer)
 
-conflicts_prefer(dplyr::filter)
+conflicts_prefer(
+  dplyr::filter,
+  urbnthemes::scale_fill_discrete
+)
 
 options(
   scipen = 999,
   pillar.sigfig = 10
   )
+
+set_urbn_defaults(style = "print")
 ```
 
 Load the full transformed Citi Bike 2018 data (for reference)
@@ -147,12 +153,14 @@ print(boot_dist_1)
 
 boot_dist_1 |>
   ggplot(aes(x = stat)) +
-  geom_dotplot(binwidth = 0.1) +
+  geom_dotplot(binwidth = 0.1, fill = "#1696d2", stroke = 0) +
   theme_minimal() +
   xlim(10, 16) +
   labs(x = "Bootstrap Mean Trip Duration", y = "") +
   theme(axis.text.y = element_blank(),
-      axis.ticks.y = element_blank())
+      axis.ticks.y = element_blank(),
+      panel.grid.minor = element_blank()
+      )
 ```
 
 ```{r}
@@ -167,12 +175,14 @@ print(boot_dist_10)
 
 boot_dist_10 |>
   ggplot(aes(x = stat)) +
-  geom_dotplot(binwidth = 0.1) +
+  geom_dotplot(binwidth = 0.1, fill = "#1696d2", stroke = 0) +
   theme_minimal() +
   xlim(10, 16) +
   labs(x = "Bootstrap Mean Trip Duration", y = "") +
   theme(axis.text.y = element_blank(),
-      axis.ticks.y = element_blank())
+      axis.ticks.y = element_blank(),
+      panel.grid.minor = element_blank()
+      )
 ```
 
 ```{r}
@@ -185,12 +195,14 @@ boot_dist_1000 <- citibike_sample_2018 |>
 
 boot_dist_1000 |>
   ggplot(aes(x = stat)) +
-  geom_dotplot(binwidth = 0.1, dotsize = .45) +
+  geom_dotplot(binwidth = 0.1, dotsize = .45, fill = "#1696d2", stroke = 0) +
   theme_minimal() +
   xlim(10, 16) +
   labs(x = "Bootstrap Mean Trip Duration", y = "") +
   theme(axis.text.y = element_blank(),
-      axis.ticks.y = element_blank())
+      axis.ticks.y = element_blank(),
+      panel.grid.minor = element_blank()
+      )
 ```
 
 ```{r}
@@ -200,13 +212,15 @@ boot_ci <- boot_dist_1000 |>
 print(boot_ci)
 
 boot_dist_1000 |>
-  visualize(bins = 100) +
-  shade_confidence_interval(endpoints = boot_ci) +
+  visualize(bins = 100, fill = "#1696d2", stroke = 0) +
+  shade_confidence_interval(endpoints = boot_ci, fill = "#fdbf11", color = "#fdbf11") +
   theme_minimal() +
   xlim(10, 16) +
   labs(x = "Bootstrap Mean Trip Duration", y = "") +
   theme(axis.text.y = element_blank(),
-      axis.ticks.y = element_blank())
+      axis.ticks.y = element_blank(),
+      panel.grid.minor = element_blank()
+      )
 ```
 
 ### Mathematical confidence interval for mean trip duration
@@ -251,5 +265,43 @@ citibike_sample_2018 |>
     fill = "User Type"
   ) +
   xlim(0, 60) +
+  theme_minimal() +
+  remove_ticks()
+```
+
+```{r}
+citibike_sample_2018 |>
+  group_by(usertype) |>
+  summarize(mean_duration = mean(tripduration_min, na.rm = TRUE)) |>
+  ggplot(aes(x = usertype, y = mean_duration, fill = usertype)) +
+  urbnthemes::geom_col(show.legend = FALSE) +
+  labs(
+    title = "Mean Trip Duration by User Type",
+    x = "",
+    y = "Mean Trip Duration (minutes)"
+  ) +
+  coord_flip() +
+  theme_minimal()
+```
+
+```{r}
+citibike_sample_2018 |>
+  ggplot(aes(x = weekday_weekend, y = tripduration_min, fill = weekday_weekend)) +
+  geom_boxplot(show.legend = FALSE, outlier.shape = NA) +
+  stat_summary(
+    fun = mean, 
+    geom = "point", 
+    shape = 23,
+    size = 4, 
+    fill = "#db2b27",
+    color = "#000000",
+    show.legend = FALSE
+    ) +
+  labs(
+    title = "Trip Duration Distribution by Week Part",
+    x = "",
+    y = "Trip Duration (minutes)"
+  ) +
+  coord_flip(ylim = c(0, 30)) +
   theme_minimal()
 ```
