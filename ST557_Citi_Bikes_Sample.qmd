@@ -18,10 +18,11 @@ The data for this analysis is sourced from the Citi Bike system's public data re
 
 ### Data Dictionary
 
--   `starttime`: Timestamp for when the trip started (datetime)
--   `stoptime`: Timestamp for when the trip ended (datetime)
 -   `tripduration`: Duration of the trip in seconds (numeric)
 -   `tripduration_min`: Duration of the trip in minutes (numeric, calculated from tripduration)
+-   `starttime`: Timestamp for when the trip started (datetime)
+-   `stoptime`: Timestamp for when the trip ended (datetime)
+-   `month`: Month the trip took place (ordered factor: Jan-Dec)
 -   `day_of_week`: Day of the week the trip started (ordered factor: Mon-Sun)
 -   `weekday_weekend`: Whether the trip occurred on a weekday or weekend (factor)
 -   `hour_of_day`: Hour of day when the trip started, 0-23 (integer)
@@ -54,10 +55,14 @@ library(broom)
 library(skimr)
 library(psych)
 library(infer)
+library(leaflet)
 
 conflicts_prefer(
   dplyr::filter,
-  urbnthemes::scale_fill_discrete
+  urbnthemes::scale_fill_discrete,
+  urbnthemes::scale_colour_discrete,
+  urbnthemes::scale_fill_ordinal,
+  janitor::chisq.test
 )
 
 options(
@@ -252,36 +257,22 @@ tibble(
 )
 ```
 
-### Bivariate analysis: Trip duration by user type
+
+### Bivariate analysis: Trip duration by weekday vs. weekend
 
 ```{r}
 citibike_sample_2018 |>
-  ggplot(aes(x = tripduration_min, fill = usertype)) +
+  ggplot(aes(x = tripduration_min, fill = weekday_weekend)) +
   geom_density(alpha = 0.5) +
   labs(
-    title = "Distribution of Trip Durations by User Type",
+    title = "Distribution of Trip Durations by Week Part",
     x = "Trip Duration (minutes)",
     y = "Density",
-    fill = "User Type"
+    fill = "Week Part"
   ) +
   xlim(0, 60) +
   theme_minimal() +
   remove_ticks()
-```
-
-```{r}
-citibike_sample_2018 |>
-  group_by(usertype) |>
-  summarize(mean_duration = mean(tripduration_min, na.rm = TRUE)) |>
-  ggplot(aes(x = usertype, y = mean_duration, fill = usertype)) +
-  urbnthemes::geom_col(show.legend = FALSE) +
-  labs(
-    title = "Mean Trip Duration by User Type",
-    x = "",
-    y = "Mean Trip Duration (minutes)"
-  ) +
-  coord_flip() +
-  theme_minimal()
 ```
 
 ```{r}
@@ -305,3 +296,338 @@ citibike_sample_2018 |>
   coord_flip(ylim = c(0, 30)) +
   theme_minimal()
 ```
+
+### Randomization test: Mean trip duration on weekdays vs. weekends
+
+Calculate observed difference in means
+```{r}
+obs_diff <- citibike_sample_2018 |>
+  specify(tripduration_min ~ weekday_weekend) |>
+  calculate(stat = "diff in means", order = c("Weekend", "Weekday"))
+
+obs_diff
+```
+
+Generate null distribution through permutation
+```{r}
+set.seed(557)
+
+null_distribution <- citibike_sample_2018 |>
+  specify(tripduration_min ~ weekday_weekend) |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  calculate(stat = "diff in means", order = c("Weekend", "Weekday"))
+```
+
+Visualize null distribution with observed statistic
+```{r}
+null_distribution |>
+  visualize() +
+  shade_p_value(obs_stat = obs_diff, direction = "two_sided") +
+  labs(
+    title = "Null Distribution of Mean Trip Duration Difference",
+    x = "Difference in Mean Trip Duration (Weekend - Weekday)",
+    y = "Frequency"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+null_distribution |>
+  get_p_value(obs_stat = obs_diff$stat, direction = "two-sided")
+```
+
+### Matematical two-sample t-test: Mean trip duration on weekdays vs. weekends
+```{r}
+citibike_sample_2018 |>
+  mutate(weekday_weekend = fct_relevel(weekday_weekend, "Weekend", "Weekday")) |>
+  (\(x) t.test(tripduration_min ~ weekday_weekend, data = x, var.equal = FALSE))() |>
+  tidy()
+```
+
+### Comparison of randomization test and t-test results
+```{r}
+true_diff <- citibike_2018 |>
+  group_by(weekday_weekend) |>
+  summarize(mean_duration = mean(tripduration_min, na.rm = TRUE)) |>
+  summarize(diff = diff(mean_duration)) |>
+  pull(diff)
+
+randomization_result <-
+  null_distribution |>
+  get_p_value(obs_stat = obs_diff, direction = "two-sided") |>
+  pull(p_value)
+
+t_test_result <- citibike_sample_2018 |>
+  mutate(weekday_weekend = fct_relevel(weekday_weekend, "Weekend", "Weekday")) |>
+  (\(x) t.test(tripduration_min ~ weekday_weekend, data = x, var.equal = FALSE))() |>
+  tidy()
+
+tibble(
+  Method = c("Population (True)", "Randomization Test", "T-test"),
+  Difference = c(
+    true_diff,
+    obs_diff$stat,
+    t_test_result$estimate
+  ),
+  P_Value = c(
+    NA,
+    randomization_result,
+    t_test_result$p.value
+  )
+)
+```
+
+
+### Bivariate analysis: Trip duration by user type
+
+```{r}
+citibike_sample_2018 |>
+  ggplot(aes(x = tripduration_min, fill = usertype)) +
+  geom_density(alpha = 0.5) +
+  labs(
+    title = "Distribution of Trip Durations by User Type",
+    x = "Trip Duration (minutes)",
+    y = "Density",
+    fill = "User Type"
+  ) +
+  xlim(0, 60) +
+  theme_minimal() +
+  remove_ticks()
+```
+
+```{r}
+citibike_sample_2018 |>
+  ggplot(aes(x = usertype, y = tripduration_min, fill = usertype)) +
+  geom_boxplot(show.legend = FALSE, outlier.shape = NA) +
+  stat_summary(
+    fun = mean, 
+    geom = "point", 
+    shape = 23,
+    size = 4, 
+    fill = "#db2b27",
+    color = "#000000",
+    show.legend = FALSE
+    ) +
+  labs(
+    title = "Trip Duration Distribution by Usertype",
+    x = "",
+    y = "Trip Duration (minutes)"
+  ) +
+  coord_flip(ylim = c(0, 60)) +
+  theme_minimal()
+```
+
+```{r}
+citibike_sample_2018 |>
+  group_by(usertype) |>
+  summarize(median_duration = median(tripduration_min, na.rm = TRUE)) |>
+  ggplot(aes(x = usertype, y = median_duration, fill = usertype)) +
+  urbnthemes::geom_col(show.legend = FALSE) +
+  labs(
+    title = "Median Trip Duration by User Type",
+    x = "",
+    y = "Median Trip Duration (minutes)"
+  ) +
+  coord_flip() +
+  theme_minimal()
+```
+
+```{r}
+obs_diff_median <- citibike_sample_2018 |>
+  specify(tripduration_min ~ usertype) |>
+  calculate(stat = "diff in medians", order = c("Customer", "Subscriber"))
+
+obs_diff_median
+```
+
+```{r}
+set.seed(557)
+
+null_distribution_median <- citibike_sample_2018 |>
+  specify(tripduration_min ~ usertype) |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  calculate(stat = "diff in medians", order = c("Customer", "Subscriber"))
+```
+
+
+```{r}
+null_distribution_median |>
+  visualize() +
+  shade_p_value(obs_stat = obs_diff_median, direction = "two-sided") +
+  labs(
+    title = "Null Distribution of Difference in Median Trip Duration",
+    x = "Difference in Median Duration (minutes)",
+    y = "Count"
+  )
+```
+
+```{r}
+null_distribution_median |>
+  get_p_value(obs_stat = obs_diff_median, direction = "two-sided")
+```
+
+```{r}
+wilcox.test(tripduration_min ~ usertype,
+            data = citibike_sample_2018,
+            exact = FALSE) |>
+  tidy()
+```
+
+```{r}
+true_diff_median <- citibike_2018 |>
+  group_by(usertype) |>
+  summarize(median_duration = median(tripduration_min, na.rm = TRUE)) |>
+  summarize(diff = diff(median_duration)) |>
+  pull(diff)
+
+randomization_result_median <-
+  null_distribution_median |>
+  get_p_value(obs_stat = obs_diff_median, direction = "two-sided") |>
+  pull(p_value)
+
+wilcox_result <- wilcox.test(tripduration_min ~ usertype,
+                              data = citibike_sample_2018,
+                              exact = FALSE) |>
+  tidy()
+
+tibble(
+  Method = c("Population (True)", "Randomization Test", "Wilcoxon Test"),
+  Difference = c(
+    true_diff_median,
+    obs_diff_median$stat,
+    obs_diff_median$stat  # Same observed difference
+  ),
+  P_Value = c(
+    NA,
+    randomization_result_median,
+    wilcox_result$p.value
+  )
+)
+```
+
+```{r}
+citibike_sample_2018 |>
+  ggplot(aes(x = time_of_day, y = tripduration_min, fill = time_of_day)) +
+  geom_boxplot(show.legend = FALSE, outlier.shape = NA) +
+  stat_summary(
+    fun = mean, 
+    geom = "point", 
+    shape = 23,
+    size = 3, 
+    fill = "#db2b27",
+    color = "#000000",
+    show.legend = FALSE
+    ) +
+  labs(
+    title = "Trip Duration Distribution by Time of Day",
+    x = "",
+    y = "Trip Duration (minutes)"
+  ) +
+  coord_flip(ylim = c(0, 30)) +
+  theme_minimal()
+```
+
+```{r}
+aov(tripduration_min ~ time_of_day, data = citibike_sample_2018) |>
+  tidy()
+```
+
+```{r}
+citibike_sample_2018 |>
+  count(hour_of_day, usertype) |>
+  ggplot(aes(x = hour_of_day, y = n, color = usertype)) +
+  geom_line(linewidth = 1) +
+  labs(title = "Trip Volume by Hour and User Type",
+       x = "Hour of Day", y = "Number of Trips")
+```
+
+
+```{r}
+citibike_sample_2018 |>
+  ggplot(aes(x = approx_age, y = tripduration_min)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Trip Duration by Age",
+    x = "Age (years)",
+    y = "Trip Duration (minutes)"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+citibike_sample_2018 |>
+  filter(tripduration_min <= 60) |>
+  ggplot(aes(x = approx_age, y = tripduration_min)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Trip Duration by Age (trips ≤ 60 minutes)",
+    x = "Age (years)",
+    y = "Trip Duration (minutes)"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+cor.test(citibike_sample_2018$approx_age, 
+         citibike_sample_2018$tripduration_min) |>
+  tidy()
+```
+
+
+```{r}
+citibike_sample_2018 |>
+  group_by(usertype, gender) |>
+  summarize(
+    n = n(),
+    mean_age = mean(approx_age, na.rm = TRUE),
+    median_age = median(approx_age, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+```{r}
+chisq.test(citibike_sample_2018$usertype, citibike_sample_2018$gender) |>
+  tidy()
+```
+
+```{r}
+citibike_sample_2018 |>
+  count(start_station_name, sort = TRUE) |>
+  slice_head(n = 10) |>
+  ggplot(aes(x = reorder(start_station_name, n), y = n)) +
+  urbnthemes::geom_col() +
+  coord_flip() +
+  labs(title = "Top 10 Most Popular Start Stations",
+       x = "", y = "Number of Trips")
+```
+
+```{r}
+station_counts <- citibike_sample_2018 |>
+  count(start_station_name, start_station_latitude, start_station_longitude) |>
+  mutate(
+    top_station = if_else(rank(desc(n)) <= 10, "Top 10", "Other"),
+    color = if_else(top_station == "Top 10", "#d63163", "#1696d2")
+  )
+
+leaflet(station_counts) |>
+  addProviderTiles(providers$CartoDB.Positron) |>
+  addCircleMarkers(
+    lng = ~start_station_longitude,
+    lat = ~start_station_latitude,
+    radius = ~sqrt(n) * 2,
+    popup = ~paste0(start_station_name, "<br>Trips: ", n),
+    fillOpacity = 0.7,
+    color = ~color,
+    fillColor = ~color,
+    stroke = TRUE,
+    weight = 1
+  ) |>
+  addLegend(
+    position = "bottomright",
+    colors = c("#d63163", "#1696d2"),
+    labels = c("Top 10 Stations", "Other Stations"),
+    title = "Station Volume"
+  )
+```
+

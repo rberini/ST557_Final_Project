@@ -7,7 +7,7 @@ project:
 
 format:
   html:
-    theme: default
+    theme: materia
     css: styles.css
     include-in-header:
       text: |
