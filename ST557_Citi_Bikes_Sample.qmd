@@ -55,6 +55,7 @@ library(broom)
 library(skimr)
 library(psych)
 library(infer)
+library(geomtextpath)
 library(leaflet)
 
 conflicts_prefer(
@@ -115,11 +116,12 @@ citibike_sample_2018 |>
   ggplot(aes(x = tripduration_min)) +
   geom_density() +
   labs(
-    title = "Distribution of Trip Durations",
+    title = "Distribution of Trip Duration",
     x = "Trip Duration (minutes)",
     y = "Density"
   ) +
-  theme_minimal()
+  remove_axis(axis = "y") +
+  remove_ticks()
 ```
 
 ```{r}
@@ -127,12 +129,13 @@ citibike_sample_2018 |>
   ggplot(aes(x = tripduration_min)) +
   geom_density() +
   labs(
-    title = "Distribution of Trip Durations",
+    title = "Distribution of Trip Duration",
     x = "Trip Duration (minutes)",
     y = "Density"
   ) +
   xlim(0, 60) +
-  theme_minimal()
+  remove_axis(axis = "y") +
+  remove_ticks()
 ```
 
 ### Bootstrap confidence interval for mean trip duration
@@ -159,7 +162,6 @@ print(boot_dist_1)
 boot_dist_1 |>
   ggplot(aes(x = stat)) +
   geom_dotplot(binwidth = 0.1, fill = "#1696d2", stroke = 0) +
-  theme_minimal() +
   xlim(10, 16) +
   labs(x = "Bootstrap Mean Trip Duration", y = "") +
   theme(axis.text.y = element_blank(),
@@ -181,7 +183,6 @@ print(boot_dist_10)
 boot_dist_10 |>
   ggplot(aes(x = stat)) +
   geom_dotplot(binwidth = 0.1, fill = "#1696d2", stroke = 0) +
-  theme_minimal() +
   xlim(10, 16) +
   labs(x = "Bootstrap Mean Trip Duration", y = "") +
   theme(axis.text.y = element_blank(),
@@ -201,7 +202,6 @@ boot_dist_1000 <- citibike_sample_2018 |>
 boot_dist_1000 |>
   ggplot(aes(x = stat)) +
   geom_dotplot(binwidth = 0.1, dotsize = .45, fill = "#1696d2", stroke = 0) +
-  theme_minimal() +
   xlim(10, 16) +
   labs(x = "Bootstrap Mean Trip Duration", y = "") +
   theme(axis.text.y = element_blank(),
@@ -219,7 +219,6 @@ print(boot_ci)
 boot_dist_1000 |>
   visualize(bins = 100, fill = "#1696d2", stroke = 0) +
   shade_confidence_interval(endpoints = boot_ci, fill = "#fdbf11", color = "#fdbf11") +
-  theme_minimal() +
   xlim(10, 16) +
   labs(x = "Bootstrap Mean Trip Duration", y = "") +
   theme(axis.text.y = element_blank(),
@@ -257,7 +256,6 @@ tibble(
 )
 ```
 
-
 ### Bivariate analysis: Trip duration by weekday vs. weekend
 
 ```{r}
@@ -271,7 +269,7 @@ citibike_sample_2018 |>
     fill = "Week Part"
   ) +
   xlim(0, 60) +
-  theme_minimal() +
+  remove_axis(axis = "y") +
   remove_ticks()
 ```
 
@@ -293,13 +291,13 @@ citibike_sample_2018 |>
     x = "",
     y = "Trip Duration (minutes)"
   ) +
-  coord_flip(ylim = c(0, 30)) +
-  theme_minimal()
+  coord_flip(ylim = c(0, 30))
 ```
 
 ### Randomization test: Mean trip duration on weekdays vs. weekends
 
 Calculate observed difference in means
+
 ```{r}
 obs_diff <- citibike_sample_2018 |>
   specify(tripduration_min ~ weekday_weekend) |>
@@ -309,6 +307,7 @@ obs_diff
 ```
 
 Generate null distribution through permutation
+
 ```{r}
 set.seed(557)
 
@@ -320,16 +319,18 @@ null_distribution <- citibike_sample_2018 |>
 ```
 
 Visualize null distribution with observed statistic
+
 ```{r}
 null_distribution |>
   visualize() +
-  shade_p_value(obs_stat = obs_diff, direction = "two_sided") +
+  shade_p_value(obs_stat = obs_diff$stat, direction = "two_sided") +
   labs(
     title = "Null Distribution of Mean Trip Duration Difference",
     x = "Difference in Mean Trip Duration (Weekend - Weekday)",
     y = "Frequency"
   ) +
-  theme_minimal()
+  remove_axis(axis = "y") +
+  remove_ticks()
 ```
 
 ```{r}
@@ -337,7 +338,8 @@ null_distribution |>
   get_p_value(obs_stat = obs_diff$stat, direction = "two-sided")
 ```
 
-### Matematical two-sample t-test: Mean trip duration on weekdays vs. weekends
+### Mathematical two-sample t-test: Mean trip duration on weekdays vs. weekends
+
 ```{r}
 citibike_sample_2018 |>
   mutate(weekday_weekend = fct_relevel(weekday_weekend, "Weekend", "Weekday")) |>
@@ -346,6 +348,7 @@ citibike_sample_2018 |>
 ```
 
 ### Comparison of randomization test and t-test results
+
 ```{r}
 true_diff <- citibike_2018 |>
   group_by(weekday_weekend) |>
@@ -355,7 +358,7 @@ true_diff <- citibike_2018 |>
 
 randomization_result <-
   null_distribution |>
-  get_p_value(obs_stat = obs_diff, direction = "two-sided") |>
+  get_p_value(obs_stat = obs_diff$stat, direction = "two-sided") |>
   pull(p_value)
 
 t_test_result <- citibike_sample_2018 |>
@@ -378,7 +381,6 @@ tibble(
 )
 ```
 
-
 ### Bivariate analysis: Trip duration by user type
 
 ```{r}
@@ -392,7 +394,7 @@ citibike_sample_2018 |>
     fill = "User Type"
   ) +
   xlim(0, 60) +
-  theme_minimal() +
+  remove_axis(axis = "y") +
   remove_ticks()
 ```
 
@@ -414,8 +416,7 @@ citibike_sample_2018 |>
     x = "",
     y = "Trip Duration (minutes)"
   ) +
-  coord_flip(ylim = c(0, 60)) +
-  theme_minimal()
+  coord_flip(ylim = c(0, 60))
 ```
 
 ```{r}
@@ -429,8 +430,7 @@ citibike_sample_2018 |>
     x = "",
     y = "Median Trip Duration (minutes)"
   ) +
-  coord_flip() +
-  theme_minimal()
+  coord_flip()
 ```
 
 ```{r}
@@ -450,7 +450,6 @@ null_distribution_median <- citibike_sample_2018 |>
   generate(reps = 1000, type = "permute") |>
   calculate(stat = "diff in medians", order = c("Customer", "Subscriber"))
 ```
-
 
 ```{r}
 null_distribution_median |>
@@ -525,8 +524,7 @@ citibike_sample_2018 |>
     x = "",
     y = "Trip Duration (minutes)"
   ) +
-  coord_flip(ylim = c(0, 30)) +
-  theme_minimal()
+  coord_flip(ylim = c(0, 30))
 ```
 
 ```{r}
@@ -539,10 +537,49 @@ citibike_sample_2018 |>
   count(hour_of_day, usertype) |>
   ggplot(aes(x = hour_of_day, y = n, color = usertype)) +
   geom_line(linewidth = 1) +
+  geom_label(
+    data = ~group_by(.x, usertype) |> filter(hour_of_day == max(hour_of_day)),
+    aes(label = usertype),
+    hjust = -0.1,
+    size = 3,
+    fontface = "bold",
+    fill = "white",
+    label.size = 0,
+    label.padding = unit(0.15, "lines")
+  ) +
+  scale_x_continuous(
+    breaks = seq(0, 24, by = 6),
+    expand = expansion(mult = c(0.02, 0.15))
+  ) +
   labs(title = "Trip Volume by Hour and User Type",
-       x = "Hour of Day", y = "Number of Trips")
+       x = "Hour of Day", y = "Number of Trips") +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off")
 ```
 
+```{r}
+citibike_sample_2018 |>
+  count(month, usertype) |>
+  ggplot(aes(x = month, y = n, color = usertype, group = usertype)) +
+  geom_line(linewidth = 1) +
+  geom_label(
+    data = ~group_by(.x, usertype) |> filter(month == max(month)),
+    aes(label = usertype),
+    hjust = -0.1,
+    size = 3,
+    fontface = "bold",
+    fill = "white",
+    label.size = 0,
+    label.padding = unit(0.15, "lines")
+  ) +
+  scale_x_discrete(
+    expand = expansion(mult = c(0.02, 0.15))
+  ) +
+  labs(title = "Trip Volume by Month and User Type",
+       x = "Month", y = "Number of Trips") +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off")
+```
 
 ```{r}
 citibike_sample_2018 |>
@@ -553,7 +590,7 @@ citibike_sample_2018 |>
     x = "Age (years)",
     y = "Trip Duration (minutes)"
   ) +
-  theme_minimal()
+  scatter_grid()
 ```
 
 ```{r}
@@ -566,7 +603,7 @@ citibike_sample_2018 |>
     x = "Age (years)",
     y = "Trip Duration (minutes)"
   ) +
-  theme_minimal()
+  scatter_grid()
 ```
 
 ```{r}
@@ -574,7 +611,6 @@ cor.test(citibike_sample_2018$approx_age,
          citibike_sample_2018$tripduration_min) |>
   tidy()
 ```
-
 
 ```{r}
 citibike_sample_2018 |>
@@ -586,10 +622,13 @@ citibike_sample_2018 |>
     .groups = "drop"
   )
 ```
+
 ```{r}
 chisq.test(citibike_sample_2018$usertype, citibike_sample_2018$gender) |>
   tidy()
 ```
+
+### Popular start stations
 
 ```{r}
 citibike_sample_2018 |>
@@ -602,13 +641,16 @@ citibike_sample_2018 |>
        x = "", y = "Number of Trips")
 ```
 
+### Map of start stations by trip volume
+
 ```{r}
 station_counts <- citibike_sample_2018 |>
   count(start_station_name, start_station_latitude, start_station_longitude) |>
   mutate(
     top_station = if_else(rank(desc(n)) <= 10, "Top 10", "Other"),
-    color = if_else(top_station == "Top 10", "#d63163", "#1696d2")
-  )
+    color = if_else(top_station == "Top 10", "#0a4c6a", "#ca5800")
+  ) |>
+  arrange(top_station)
 
 leaflet(station_counts) |>
   addProviderTiles(providers$CartoDB.Positron) |>
@@ -625,9 +667,66 @@ leaflet(station_counts) |>
   ) |>
   addLegend(
     position = "bottomright",
-    colors = c("#d63163", "#1696d2"),
-    labels = c("Top 10 Stations", "Other Stations"),
-    title = "Station Volume"
+    colors = c("#0a4c6a", "#ca5800"),
+    labels = c("Top 10", "Other"),
+    title = "Start Station Volume"
   )
 ```
 
+### Popular end stations
+
+```{r}
+citibike_sample_2018 |>
+  count(end_station_name, sort = TRUE) |>
+  slice_head(n = 10) |>
+  ggplot(aes(x = reorder(end_station_name, n), y = n)) +
+  urbnthemes::geom_col() +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 10, by = 2.5)) +
+  labs(title = "Top 10 Most Popular Destination Stations",
+       x = "", y = "Number of Trips")
+```
+
+### Map of popular start and end stations
+
+```{r}
+start_counts <- citibike_sample_2018 |>
+  count(start_station_name, start_station_latitude, start_station_longitude) |>
+  slice_max(n, n = 10) |>
+  mutate(type = "Top Start")
+
+end_counts <- citibike_sample_2018 |>
+  count(end_station_name, end_station_latitude, end_station_longitude) |>
+  rename(
+    start_station_name = end_station_name,
+    start_station_latitude = end_station_latitude,
+    start_station_longitude = end_station_longitude
+  ) |>
+  slice_max(n, n = 10) |>
+  mutate(type = "Top End")
+
+station_counts <- bind_rows(end_counts, start_counts) |>
+  mutate(
+    color = if_else(type == "Top Start", "#0a4c6a", "#ca5800")
+  )
+
+leaflet(station_counts) |>
+  addProviderTiles(providers$CartoDB.Positron) |>
+  addCircleMarkers(
+    lng = ~start_station_longitude,
+    lat = ~start_station_latitude,
+    radius = ~sqrt(n) * 2.5,
+    popup = ~paste0(start_station_name, "<br>", type, "<br>Trips: ", n),
+    fillOpacity = 0.7,
+    color = ~color,
+    fillColor = ~color,
+    stroke = TRUE,
+    weight = 1
+  ) |>
+  addLegend(
+    position = "bottomright",
+    colors = c("#0a4c6a", "#ca5800"),
+    labels = c("Top 10 Start Stations", "Top 10 End Stations"),
+    title = "Station Type"
+  )
+```

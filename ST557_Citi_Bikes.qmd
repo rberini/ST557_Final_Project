@@ -175,8 +175,7 @@ citibike_2018 |>
     x = "Trip Duration (minutes)",
     y = "Density"
   ) +
-  xlim(0, 60) +
-  theme_minimal()
+  xlim(0, 60)
 ```
 
 ### Age distribution
@@ -186,16 +185,14 @@ ggplot(citibike_2018, aes(x = approx_age)) +
   geom_density() +
   labs(title = "Distribution of Age", 
        x = "Age (years)", 
-       y = "Density") +
-  theme_minimal()
+       y = "Density")
 ```
 
 ```{r}
 citibike_2018 |>
   ggplot(aes(x = birth_year)) +
   geom_histogram(binwidth = 1) +
-  labs(title = "Distribution of Birth Years") +
-  theme_minimal()
+  labs(title = "Distribution of Birth Years")
 ```
 
 ```{r}
@@ -216,8 +213,7 @@ citibike_2018 |>
   ) |>
   ggplot(aes(x = birth_year)) +
   geom_histogram(binwidth = 1) +
-  labs(title = "Distribution of Birth Years") +
-  theme_minimal()
+  labs(title = "Distribution of Birth Years")
 ```
 
 ```{r}
