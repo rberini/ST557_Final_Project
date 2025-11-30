@@ -558,6 +558,14 @@ citibike_sample_2018 |>
        x = "Hour of Day", y = "Number of Trips") +
   theme(legend.position = "none") +
   coord_cartesian(clip = "off")
+
+ggsave(
+  filename = "images/citibike_hour_user.png",
+  width = 6,
+  height = 4,
+  units = "in",
+  dpi = 300
+)
 ```
 
 ```{r}
@@ -583,7 +591,6 @@ citibike_sample_2018 |>
   theme(legend.position = "none") +
   coord_cartesian(clip = "off")
 ```
-
 
 ```{r}
 citibike_sample_2018 |>
