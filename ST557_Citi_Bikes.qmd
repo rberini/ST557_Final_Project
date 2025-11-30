@@ -12,9 +12,13 @@ execute:
 
 The Citi Bike program is a bike-sharing system in New York City that allows users to rent bicycles for short trips around the city. The program has become increasingly popular since its launch in 2013, with millions of rides taken each year. In this project, we will analyze Citi Bike trip data for 2018 to gain insights into usage patterns, popular routes, and user profiles.
 
+The primary operational goal is to optimize bike distribution across stations to meet demand. Bike turnover time is a critical metric for this purpose, as it indicates how frequently bikes are rented and returned at each station. By analyzing trip duration, start and end locations, and user demographics, we can identify high-demand stations and times of day, allowing for better allocation and re-balancing of bikes and improved service for users. Monthly operational reports can be found at <https://citibikenyc.com/system-data/operating-reports>.
+
+In 2018, Citi Bike offered two main rider types: **Subscribers** and **Customers**. Subscribers paid an annual membership fee of \$169 for unlimited rides up to 45 minutes each. The overage fee for subscribers was \$2.50 for each additional 15 minutes. Customers paid \$3 for a single ride of 30 minutes or less, or \$12 for a day pass including unlimited 30-minute rides within 24 hours. The overage fee for customers was \$4 for each additional 15 minutes. Understanding the differences in usage patterns between these two groups can help inform pricing strategies and service improvements.
+
 ### Data Source
 
-The data for this analysis is sourced from the Citi Bike system's public data repository, which provides monthly trip data in CSV format. The dataset includes information such as trip duration, start and end stations, user type (subscriber or customer), and timestamps for each trip.
+The data for this analysis is sourced from the Citi Bike system's public data repository (<https://citibikenyc.com/system-data>), which provides monthly trip data in CSV format. The dataset includes information such as trip duration, start and end stations, user type (subscriber or customer), and timestamps for each trip.
 
 ### Data Dictionary
 
@@ -35,13 +39,13 @@ The data for this analysis is sourced from the Citi Bike system's public data re
 Load required packages
 
 ```{r}
-library(conflicted)
-library(tidyverse)
-library(fs)
-library(vroom)
-library(janitor)
-library(urbnthemes)
-library(skimr)
+library(conflicted) #for managing function name conflicts
+library(tidyverse) #for data manipulation and visualization
+library(fs) #for file system operations
+library(vroom) #for fast data reading
+library(janitor) #for data cleaning and nicer tables
+library(urbnthemes) #for urban institute chart styles
+library(skimr) #for enhanced data summaries
 
 conflicts_prefer(dplyr::filter)
 
@@ -252,7 +256,7 @@ citibike_2018 <-
   )
 ```
 
-## Save data and create sample
+### Save data
 
 ```{r}
 write_csv(citibike_2018_raw, "data/combined/citibike_2018_full.csv")
@@ -260,6 +264,10 @@ write_rds(citibike_2018_raw, "data/combined/citibike_2018_full.rds")
 write_csv(citibike_2018, "data/combined/citibike_2018_transformed.csv")
 write_rds(citibike_2018, "data/combined/citibike_2018_transformed.rds")
 ```
+
+## Create sample
+
+Create a random sample of 1000 rows
 
 ```{r}
 set.seed(557)
@@ -269,9 +277,11 @@ citibike_sample_2018 <-
   slice_sample(n = 1000)
 ```
 
-### Write sample to file
+Write sample to file
 
 ```{r}
 write_csv(citibike_sample_2018, "data/sample/citibike_2018_sample_1000.csv")
 write_rds(citibike_sample_2018, "data/sample/citibike_2018_sample_1000.rds")
 ```
+
+Continued analysis is performed in a separate notebook using the sample data for faster processing. The sample data analysis can be found at <https://rberini.github.io/ST557_Final_Project/ST557_Citi_Bikes_Sample.html>.

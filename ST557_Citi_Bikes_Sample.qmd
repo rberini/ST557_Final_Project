@@ -12,9 +12,13 @@ execute:
 
 The Citi Bike program is a bike-sharing system in New York City that allows users to rent bicycles for short trips around the city. The program has become increasingly popular since its launch in 2013, with millions of rides taken each year. In this project, we will analyze Citi Bike trip data for 2018 to gain insights into usage patterns, popular routes, and user profiles.
 
+The primary operational goal is to optimize bike distribution across stations to meet demand. Bike turnover time is a critical metric for this purpose, as it indicates how frequently bikes are rented and returned at each station. By analyzing trip duration, start and end locations, and user demographics, we can identify high-demand stations and times of day, allowing for better allocation and re-balancing of bikes and improved service for users. Monthly operational reports can be found at <https://citibikenyc.com/system-data/operating-reports>.
+
+In 2018, Citi Bike offered two main rider types: **Subscribers** and **Customers**. Subscribers paid an annual membership fee of \$169 for unlimited rides up to 45 minutes each. The overage fee for subscribers was \$2.50 for each additional 15 minutes. Customers paid \$3 for a single ride of 30 minutes or less, or \$12 for a day pass including unlimited 30-minute rides within 24 hours. The overage fee for customers was \$4 for each additional 15 minutes. Understanding the differences in usage patterns between these two groups can help inform pricing strategies and service improvements.
+
 ### Data Source
 
-The data for this analysis is sourced from the Citi Bike system's public data repository, which provides monthly trip data in CSV format. The dataset includes information such as trip duration, start and end stations, user type (subscriber or customer), and timestamps for each trip.
+The data for this analysis is sourced from the Citi Bike system's public data repository (<https://citibikenyc.com/system-data>), which provides monthly trip data in CSV format. The dataset includes information such as trip duration, start and end stations, user type (subscriber or customer), and timestamps for each trip.
 
 ### Data Dictionary
 
@@ -47,16 +51,15 @@ The data for this analysis is sourced from the Citi Bike system's public data re
 Load required packages
 
 ```{r}
-library(conflicted)
-library(tidyverse)
-library(janitor)
-library(urbnthemes)
-library(broom)
-library(skimr)
-library(psych)
-library(infer)
-library(geomtextpath)
-library(leaflet)
+library(conflicted) #for managing function name conflicts
+library(tidyverse) #for data manipulation and visualization
+library(janitor) #for data cleaning and nicer tables
+library(urbnthemes) #for urban institute chart styles
+library(broom) #for tidying statistical test outputs
+library(skimr) #for enhanced data summaries
+library(psych) #for descriptive statistics
+library(infer) #for simulation-based inference
+library(leaflet) #for interactive maps
 
 conflicts_prefer(
   dplyr::filter,
@@ -559,6 +562,31 @@ citibike_sample_2018 |>
 
 ```{r}
 citibike_sample_2018 |>
+  count(day_of_week, usertype) |>
+  ggplot(aes(x = day_of_week, y = n, color = usertype, group = usertype)) +
+  geom_line(linewidth = 1) +
+  geom_label(
+    data = ~group_by(.x, usertype) |> filter(day_of_week == max(day_of_week)),
+    aes(label = usertype),
+    hjust = -0.1,
+    size = 3,
+    fontface = "bold",
+    fill = "white",
+    label.size = 0,
+    label.padding = unit(0.15, "lines")
+  ) +
+  scale_x_discrete(
+    expand = expansion(mult = c(0.02, 0.15))
+  ) +
+  labs(title = "Trip Volume by Day of Week and User Type",
+       x = "Day of Week", y = "Number of Trips") +
+  theme(legend.position = "none") +
+  coord_cartesian(clip = "off")
+```
+
+
+```{r}
+citibike_sample_2018 |>
   count(month, usertype) |>
   ggplot(aes(x = month, y = n, color = usertype, group = usertype)) +
   geom_line(linewidth = 1) +
@@ -657,7 +685,7 @@ leaflet(station_counts) |>
   addCircleMarkers(
     lng = ~start_station_longitude,
     lat = ~start_station_latitude,
-    radius = ~sqrt(n) * 2,
+    radius = ~(n^1.5) * 0.5,
     popup = ~paste0(start_station_name, "<br>Trips: ", n),
     fillOpacity = 0.7,
     color = ~color,

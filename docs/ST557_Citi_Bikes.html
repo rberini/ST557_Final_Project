@@ -147,9 +147,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>The Citi Bike program is a bike-sharing system in New York City that allows users to rent bicycles for short trips around the city. The program has become increasingly popular since its launch in 2013, with millions of rides taken each year. In this project, we will analyze Citi Bike trip data for 2018 to gain insights into usage patterns, popular routes, and user profiles.</p>
+<p>The primary operational goal is to optimize bike distribution across stations to meet demand. Bike turnover time is a critical metric for this purpose, as it indicates how frequently bikes are rented and returned at each station. By analyzing trip duration, start and end locations, and user demographics, we can identify high-demand stations and times of day, allowing for better allocation and re-balancing of bikes and improved service for users. Monthly operational reports can be found at <a href="https://citibikenyc.com/system-data/operating-reports" class="uri">https://citibikenyc.com/system-data/operating-reports</a>.</p>
+<p>In 2018, Citi Bike offered two main rider types: <strong>Subscribers</strong> and <strong>Customers</strong>. Subscribers paid an annual membership fee of $169 for unlimited rides up to 45 minutes each. The overage fee for subscribers was $2.50 for each additional 15 minutes. Customers paid $3 for a single ride of 30 minutes or less, or $12 for a day pass including unlimited 30-minute rides within 24 hours. The overage fee for customers was $4 for each additional 15 minutes. Understanding the differences in usage patterns between these two groups can help inform pricing strategies and service improvements.</p>
 <section id="data-source" class="level3">
 <h3 class="anchored" data-anchor-id="data-source">Data Source</h3>
-<p>The data for this analysis is sourced from the Citi Bike system’s public data repository, which provides monthly trip data in CSV format. The dataset includes information such as trip duration, start and end stations, user type (subscriber or customer), and timestamps for each trip.</p>
+<p>The data for this analysis is sourced from the Citi Bike system’s public data repository (<a href="https://citibikenyc.com/system-data" class="uri">https://citibikenyc.com/system-data</a>), which provides monthly trip data in CSV format. The dataset includes information such as trip duration, start and end stations, user type (subscriber or customer), and timestamps for each trip.</p>
 </section>
 <section id="data-dictionary" class="level3">
 <h3 class="anchored" data-anchor-id="data-dictionary">Data Dictionary</h3>
@@ -172,13 +174,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="data-loading-and-preparation">Data Loading and Preparation</h2>
 <p>Load required packages</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(conflicted)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vroom)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(urbnthemes)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(conflicted) <span class="co">#for managing function name conflicts</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co">#for data manipulation and visualization</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs) <span class="co">#for file system operations</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vroom) <span class="co">#for fast data reading</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co">#for data cleaning and nicer tables</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(urbnthemes) <span class="co">#for urban institute chart styles</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr) <span class="co">#for enhanced data summaries</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">conflicts_prefer</span>(dplyr<span class="sc">::</span>filter)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
@@ -1420,15 +1422,19 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-</section>
-<section id="save-data-and-create-sample" class="level2">
-<h2 class="anchored" data-anchor-id="save-data-and-create-sample">Save data and create sample</h2>
+<section id="save-data" class="level3">
+<h3 class="anchored" data-anchor-id="save-data">Save data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(citibike_2018_raw, <span class="st">"data/combined/citibike_2018_full.csv"</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(citibike_2018_raw, <span class="st">"data/combined/citibike_2018_full.rds"</span>)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(citibike_2018, <span class="st">"data/combined/citibike_2018_transformed.csv"</span>)</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(citibike_2018, <span class="st">"data/combined/citibike_2018_transformed.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+</section>
+<section id="create-sample" class="level2">
+<h2 class="anchored" data-anchor-id="create-sample">Create sample</h2>
+<p>Create a random sample of 1000 rows</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">557</span>)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1436,15 +1442,14 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="write-sample-to-file" class="level3">
-<h3 class="anchored" data-anchor-id="write-sample-to-file">Write sample to file</h3>
+<p>Write sample to file</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(citibike_sample_2018, <span class="st">"data/sample/citibike_2018_sample_1000.csv"</span>)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(citibike_sample_2018, <span class="st">"data/sample/citibike_2018_sample_1000.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Continued analysis is performed in a separate notebook using the sample data for faster processing. The sample data analysis can be found at <a href="https://rberini.github.io/ST557_Final_Project/ST557_Citi_Bikes_Sample.html" class="uri">https://rberini.github.io/ST557_Final_Project/ST557_Citi_Bikes_Sample.html</a>.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
