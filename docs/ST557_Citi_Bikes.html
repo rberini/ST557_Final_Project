@@ -191,7 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">set_urbn_defaults</span>(<span class="at">style =</span> <span class="st">"print"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Load the Citi Bike data for 2018</p>
+<p>Load the Citi Bike data for 2018 (due to storage restrictions, monthly data files are ignored in github push, but can be found here: <a href="https://www.dropbox.com/scl/fo/4t9lxprlwsb2qlm9mvog4/AEY1O31-BSayOjP49fLGNQc?rlkey=s6fc0yozc1bd24kej2kzk71d5&amp;st=qdb173fh&amp;dl=0" class="uri">https://www.dropbox.com/scl/fo/4t9lxprlwsb2qlm9mvog4/AEY1O31-BSayOjP49fLGNQc?rlkey=s6fc0yozc1bd24kej2kzk71d5&amp;st=qdb173fh&amp;dl=0</a>)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>citibike_2018_raw <span class="ot">&lt;-</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir_ls</span>(<span class="st">"data/monthly"</span>, <span class="at">glob =</span> <span class="st">"*.csv"</span>) <span class="sc">|&gt;</span></span>
@@ -252,9 +252,7 @@ $ birth_year              &lt;dbl&gt; 1992, 1969, 1956, 1974, 1992, 1968, 1978, 
 $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, Male…</code></pre>
 </div>
 </div>
-</section>
-<section id="create-calculated-variables" class="level2">
-<h2 class="anchored" data-anchor-id="create-calculated-variables">Create calculated variables</h2>
+<p>Create calculated variables</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="ot">&lt;-</span> citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -282,9 +280,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">usertype =</span> <span class="fu">fct_rev</span>(usertype)</span>
 <span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="reorder-columns-for-easier-viewing" class="level2">
-<h2 class="anchored" data-anchor-id="reorder-columns-for-easier-viewing">Reorder columns for easier viewing</h2>
+<p>Reorder columns for easier viewing</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="ot">&lt;-</span> citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(</span>
@@ -314,10 +310,9 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="exploratory-data-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory data analysis</h2>
-<section id="summary-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="summary-parameters">Summary parameters</h3>
+<section id="investigate-data-quality-issues" class="level2">
+<h2 class="anchored" data-anchor-id="investigate-data-quality-issues">Investigate data quality issues</h2>
+<p>Scan summary parameters</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(citibike_2018)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -379,6 +374,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
                                                                          </code></pre>
 </div>
 </div>
+<p>Dig deeper with <code>skimr</code> package</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">skim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -807,9 +803,8 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </table>
 </div>
 </div>
-</section>
-<section id="trip-duration-density-plot-excluding-extreme-values" class="level3">
-<h3 class="anchored" data-anchor-id="trip-duration-density-plot-excluding-extreme-values">Trip duration density plot (excluding extreme values)</h3>
+<p>Summary parameters indicate some potential data quality issues to investigate further, including trip duration, birth year, and gender. Timestamps contain some missing values.</p>
+<p>Explore trip duration distribution (excluding extreme values)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tripduration_min <span class="sc">&lt;</span> <span class="dv">2880</span>) <span class="sc">|&gt;</span></span>
@@ -826,9 +821,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </div>
 </div>
 </div>
-</section>
-<section id="zoom-in-on-trip-duration" class="level3">
-<h3 class="anchored" data-anchor-id="zoom-in-on-trip-duration">Zoom in on trip duration</h3>
+<p>Zoom in on trip duration under one hour</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> tripduration_min)) <span class="sc">+</span></span>
@@ -847,9 +840,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </div>
 </div>
 </div>
-</section>
-<section id="age-distribution" class="level3">
-<h3 class="anchored" data-anchor-id="age-distribution">Age distribution</h3>
+<p>Explore age distribution (excluding extreme values)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(citibike_2018, <span class="fu">aes</span>(<span class="at">x =</span> approx_age)) <span class="sc">+</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>() <span class="sc">+</span></span>
@@ -864,6 +855,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </div>
 </div>
 </div>
+<p>Age has some very high, unlikely values. More concerning, there is a large spike around 50 years old, indicating potential data quality issues. Confirm the spike by examining birth year distribution.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> birth_year)) <span class="sc">+</span></span>
@@ -877,6 +869,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </div>
 </div>
 </div>
+<p>Identify the value of the spike</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(birth_year, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
@@ -886,6 +879,8 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <pre><code>[1] 1969</code></pre>
 </div>
 </div>
+<p>The spike occurs at birth year 1969, indicating a potential placeholder value for missing or unknown birth years or perhaps incomplete observations.</p>
+<p>See if resolving other data quality issues alleviates the birth year spike. Here we filter out trips with missing round trip status, birth years before 1918 (age over 100), unknown gender, trip duration over 48 hours (according to Citi Bike policies, bikes are considered “lost” after 48 hours).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
@@ -906,6 +901,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </div>
 </div>
 </div>
+<p>Scan summary parameters after applying data quality filters</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
@@ -975,6 +971,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
                                                                          </code></pre>
 </div>
 </div>
+<p>Confirm resolution of issues with <code>skimr</code> after applying data quality filters</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
@@ -1410,6 +1407,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 </table>
 </div>
 </div>
+<p>Apply data quality filters to main dataset</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>citibike_2018 <span class="ot">&lt;-</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  citibike_2018 <span class="sc">|&gt;</span></span>
@@ -1421,9 +1419,9 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Male, Male, Male, Male, 
 <span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    gender <span class="sc">!=</span> <span class="st">"Unknown"</span></span>
 <span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
 <section id="save-data" class="level3">
 <h3 class="anchored" data-anchor-id="save-data">Save data</h3>
+<p>Write full and transformed datasets to files (due to storage restrictions, these files are ignored in github push, but can be found here: <a href="https://www.dropbox.com/scl/fo/ixqkr5rq1nakxo0bacp61/AIcmLoLn_SPSOD7nIHkAAug?rlkey=si1yf2etblzmywpg6pm0y6ohk&amp;st=0jmv5zz0&amp;dl=0" class="uri">https://www.dropbox.com/scl/fo/ixqkr5rq1nakxo0bacp61/AIcmLoLn_SPSOD7nIHkAAug?rlkey=si1yf2etblzmywpg6pm0y6ohk&amp;st=0jmv5zz0&amp;dl=0</a>)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(citibike_2018_raw, <span class="st">"data/combined/citibike_2018_full.csv"</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(citibike_2018_raw, <span class="st">"data/combined/citibike_2018_full.rds"</span>)</span>

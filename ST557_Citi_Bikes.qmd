@@ -57,7 +57,7 @@ options(
 set_urbn_defaults(style = "print")
 ```
 
-Load the Citi Bike data for 2018
+Load the Citi Bike data for 2018 (due to storage restrictions, monthly data files are ignored in github push, but can be found here: <https://www.dropbox.com/scl/fo/4t9lxprlwsb2qlm9mvog4/AEY1O31-BSayOjP49fLGNQc?rlkey=s6fc0yozc1bd24kej2kzk71d5&st=qdb173fh&dl=0>)
 
 ```{r}
 citibike_2018_raw <-
@@ -82,7 +82,7 @@ citibike_2018 <- citibike_2018_raw |>
 glimpse(citibike_2018)
 ```
 
-## Create calculated variables
+Create calculated variables
 
 ```{r}
 citibike_2018 <- citibike_2018 |>
@@ -112,7 +112,7 @@ citibike_2018 <- citibike_2018 |>
   )
 ```
 
-## Reorder columns for easier viewing
+Reorder columns for easier viewing
 
 ```{r}
 citibike_2018 <- citibike_2018 |>
@@ -143,20 +143,24 @@ citibike_2018 <- citibike_2018 |>
   )
 ```
 
-## Exploratory data analysis
+## Investigate data quality issues
 
-### Summary parameters
+Scan summary parameters
 
 ```{r}
 summary(citibike_2018)
 ```
+
+Dig deeper with `skimr` package
 
 ```{r}
 citibike_2018 |>
   skim()
 ```
 
-### Trip duration density plot (excluding extreme values)
+Summary parameters indicate some potential data quality issues to investigate further, including trip duration, birth year, and gender. Timestamps contain some missing values.
+
+Explore trip duration distribution (excluding extreme values)
 
 ```{r}
 citibike_2018 |>
@@ -168,7 +172,7 @@ citibike_2018 |>
        y = "Density")
 ```
 
-### Zoom in on trip duration
+Zoom in on trip duration under one hour
 
 ```{r}
 citibike_2018 |>
@@ -182,7 +186,7 @@ citibike_2018 |>
   xlim(0, 60)
 ```
 
-### Age distribution
+Explore age distribution (excluding extreme values)
 
 ```{r}
 ggplot(citibike_2018, aes(x = approx_age)) +
@@ -192,6 +196,8 @@ ggplot(citibike_2018, aes(x = approx_age)) +
        y = "Density")
 ```
 
+Age has some very high, unlikely values. More concerning, there is a large spike around 50 years old, indicating potential data quality issues. Confirm the spike by examining birth year distribution.
+
 ```{r}
 citibike_2018 |>
   ggplot(aes(x = birth_year)) +
@@ -199,12 +205,18 @@ citibike_2018 |>
   labs(title = "Distribution of Birth Years")
 ```
 
+Identify the value of the spike
+
 ```{r}
 citibike_2018 |>
   count(birth_year, sort = TRUE) |>
   slice(1) |>
   pull(birth_year)
 ```
+
+The spike occurs at birth year 1969, indicating a potential placeholder value for missing or unknown birth years or perhaps incomplete observations.
+
+See if resolving other data quality issues alleviates the birth year spike. Here we filter out trips with missing round trip status, birth years before 1918 (age over 100), unknown gender, trip duration over 48 hours (according to Citi Bike policies, bikes are considered "lost" after 48 hours).
 
 ```{r}
 citibike_2018 |>
@@ -219,6 +231,8 @@ citibike_2018 |>
   geom_histogram(binwidth = 1) +
   labs(title = "Distribution of Birth Years")
 ```
+
+Scan summary parameters after applying data quality filters
 
 ```{r}
 citibike_2018 |>
@@ -232,6 +246,8 @@ citibike_2018 |>
   summary()
 ```
 
+Confirm resolution of issues with `skimr` after applying data quality filters
+
 ```{r}
 citibike_2018 |>
   filter(
@@ -243,6 +259,8 @@ citibike_2018 |>
   ) |>
   skim()
 ```
+
+Apply data quality filters to main dataset
 
 ```{r}
 citibike_2018 <-
@@ -257,6 +275,8 @@ citibike_2018 <-
 ```
 
 ### Save data
+
+Write full and transformed datasets to files (due to storage restrictions, these files are ignored in github push, but can be found here: <https://www.dropbox.com/scl/fo/ixqkr5rq1nakxo0bacp61/AIcmLoLn_SPSOD7nIHkAAug?rlkey=si1yf2etblzmywpg6pm0y6ohk&st=0jmv5zz0&dl=0>)
 
 ```{r}
 write_csv(citibike_2018_raw, "data/combined/citibike_2018_full.csv")
