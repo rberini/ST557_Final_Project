@@ -60,6 +60,8 @@ library(skimr) #for enhanced data summaries
 library(psych) #for descriptive statistics
 library(infer) #for simulation-based inference
 library(leaflet) #for interactive maps
+library(knitr) #for enhanced markdown rendering
+library(kableExtra) #for enhanced table formatting
 
 conflicts_prefer(
   dplyr::filter,
@@ -104,6 +106,12 @@ citibike_sample_2018 |>
 ```{r}
 citibike_sample_2018 |>
   skim()
+```
+
+```{r}
+citibike_sample_2018 |>
+  select(c(tripduration_min, approx_age)) |>
+  describeBy(group = citibike_sample_2018$usertype)
 ```
 
 ### Trip duration analysis
