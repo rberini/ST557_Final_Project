@@ -179,6 +179,14 @@ boot_dist_1 |>
       axis.ticks.y = element_blank(),
       panel.grid.minor = element_blank()
       )
+
+ggsave(
+  filename = "images/citibike_boot_1.png",
+  width = 6,
+  height = 4,
+  units = "in",
+  dpi = 300
+)
 ```
 
 ```{r}
@@ -200,6 +208,14 @@ boot_dist_10 |>
       axis.ticks.y = element_blank(),
       panel.grid.minor = element_blank()
       )
+
+ggsave(
+  filename = "images/citibike_boot_10.png",
+  width = 6,
+  height = 4,
+  units = "in",
+  dpi = 300
+)
 ```
 
 ```{r}
@@ -219,6 +235,14 @@ boot_dist_1000 |>
       axis.ticks.y = element_blank(),
       panel.grid.minor = element_blank()
       )
+
+ggsave(
+  filename = "images/citibike_boot_1000.png",
+  width = 6,
+  height = 4,
+  units = "in",
+  dpi = 300
+)
 ```
 
 ```{r}
@@ -236,6 +260,14 @@ boot_dist_1000 |>
       axis.ticks.y = element_blank(),
       panel.grid.minor = element_blank()
       )
+
+ggsave(
+  filename = "images/citibike_boot_ci.png",
+  width = 6,
+  height = 4,
+  units = "in",
+  dpi = 300
+)
 ```
 
 ### Mathematical confidence interval for mean trip duration
@@ -259,13 +291,31 @@ t_result <- citibike_sample_2018 |>
   t.test(conf.level = 0.95) |>
   tidy()
 
-tibble(
-  Method = c("Population (True)", "Bootstrap", "T-test"),
-  Mean = c(pop_mean, boot_mean, t_result$estimate),
-  Lower_CI = c(NA, boot_ci$lower_ci, t_result$conf.low),
-  Upper_CI = c(NA, boot_ci$upper_ci, t_result$conf.high)
-)
+ci_table <-
+  tibble(
+    Method = c("Population (True)", "Bootstrap", "T-test"),
+    Mean = c(pop_mean, boot_mean, t_result$estimate),
+    Lower_CI = c(NA, boot_ci$lower_ci, t_result$conf.low),
+    Upper_CI = c(NA, boot_ci$upper_ci, t_result$conf.high)
+  ) |>
+  kable(digits = 4) |>
+  kable_styling(full_width = FALSE,
+                font_size = 14,
+                html_font = "Lato")
+
+ci_table
 ```
+
+```{r}
+#| eval: false
+#| echo: false
+
+save_kable(ci_table,
+           file = "images/citibike_ci_table.png",
+           zoom = 4,
+           density = 300)
+```
+
 
 ### Bivariate analysis: Trip duration by weekday vs. weekend
 
