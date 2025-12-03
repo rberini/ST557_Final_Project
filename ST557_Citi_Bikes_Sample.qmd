@@ -51,17 +51,17 @@ The data for this analysis is sourced from the Citi Bike system's public data re
 Load required packages
 
 ```{r}
-library(conflicted) #for managing function name conflicts
-library(tidyverse) #for data manipulation and visualization
-library(janitor) #for data cleaning and nicer tables
-library(urbnthemes) #for urban institute chart styles
-library(broom) #for tidying statistical test outputs
-library(skimr) #for enhanced data summaries
-library(psych) #for descriptive statistics
-library(infer) #for simulation-based inference
-library(leaflet) #for interactive maps
-library(knitr) #for enhanced markdown rendering
-library(kableExtra) #for enhanced table formatting
+library(conflicted)
+library(tidyverse)
+library(janitor)
+library(urbnthemes)
+library(broom)
+library(skimr)
+library(psych)
+library(infer)
+library(leaflet)
+library(knitr)
+library(kableExtra)
 
 conflicts_prefer(
   dplyr::filter,
@@ -98,15 +98,21 @@ glimpse(citibike_sample_2018)
 
 ### Summary statistics
 
+Produce summary statistics on sample data
+
 ```{r}
 citibike_sample_2018 |>
   summary()
 ```
 
+Conduct enhanced skim summary
+
 ```{r}
 citibike_sample_2018 |>
   skim()
 ```
+
+Consider key numerical variables by user type
 
 ```{r}
 citibike_sample_2018 |>
@@ -114,13 +120,19 @@ citibike_sample_2018 |>
   describeBy(group = citibike_sample_2018$usertype)
 ```
 
-### Trip duration analysis
+### Inference for trip duration mean
+
+#### Trip duration analysis
+
+Conduct univariate analysis of trip duration
 
 ```{r}
 citibike_sample_2018 |>
   select(tripduration_min) |>
   describe()
 ```
+
+Consider distribution of trip duration
 
 ```{r}
 citibike_sample_2018 |>
@@ -134,6 +146,8 @@ citibike_sample_2018 |>
   remove_axis(axis = "y") +
   remove_ticks()
 ```
+
+Zoom in on distribution of trip duration up to 60 minutes
 
 ```{r}
 citibike_sample_2018 |>
@@ -149,7 +163,9 @@ citibike_sample_2018 |>
   remove_ticks()
 ```
 
-### Bootstrap confidence interval for mean trip duration
+#### Bootstrap confidence interval for mean trip duration
+
+Check mean trip duration in sample
 
 ```{r}
 set.seed(557)
@@ -159,6 +175,8 @@ citibike_sample_2018 |>
   pull(tripduration_min) |>
   mean(na.rm = TRUE)
 ```
+
+Generate a single bootstrap sample, calculate mean trip duration, and plot statistic
 
 ```{r}
 set.seed(557)
@@ -185,9 +203,11 @@ ggsave(
   width = 6,
   height = 4,
   units = "in",
-  dpi = 300
+  dpi = 600
 )
 ```
+
+Generate ten bootstrap samples, calculate mean trip duration, and plot statistic
 
 ```{r}
 set.seed(557)
@@ -214,9 +234,11 @@ ggsave(
   width = 6,
   height = 4,
   units = "in",
-  dpi = 300
+  dpi = 600
 )
 ```
+
+Generate 1000 bootstrap samples, calculate mean trip duration, and plot statistic
 
 ```{r}
 set.seed(557)
@@ -241,9 +263,11 @@ ggsave(
   width = 6,
   height = 4,
   units = "in",
-  dpi = 300
+  dpi = 600
 )
 ```
+
+Calculate 95% bootstrap confidence interval for mean trip duration and visualize
 
 ```{r}
 boot_ci <- boot_dist_1000 |>
@@ -266,11 +290,13 @@ ggsave(
   width = 6,
   height = 4,
   units = "in",
-  dpi = 300
+  dpi = 600
 )
 ```
 
-### Mathematical confidence interval for mean trip duration
+#### Mathematical confidence interval for mean trip duration
+
+Perform t-test to calculate 95% confidence interval mathematically
 
 ```{r}
 citibike_sample_2018 |>
@@ -279,7 +305,9 @@ citibike_sample_2018 |>
   tidy()
 ```
 
-### Comparison of bootstrap and mathematical confidence intervals
+#### Comparison of bootstrap and mathematical confidence intervals
+
+Compare population mean, bootstrap mean and CI, and t-test mean and CI
 
 ```{r}
 pop_mean <- mean(citibike_2018$tripduration_min, na.rm = TRUE)
@@ -310,14 +338,19 @@ ci_table
 #| eval: false
 #| echo: false
 
+# this produces an error during rendering, so run separately to save image
+
 save_kable(ci_table,
            file = "images/citibike_ci_table.png",
-           zoom = 4,
-           density = 300)
+           zoom = 8,
+           density = 600)
 ```
 
+### Inference for difference in mean trip duration by weekday vs. weekend
 
-### Bivariate analysis: Trip duration by weekday vs. weekend
+#### Bivariate analysis
+
+Consider distribution of trip duration by weekday vs. weekend zoomed to 60 minutes
 
 ```{r}
 citibike_sample_2018 |>
@@ -333,6 +366,8 @@ citibike_sample_2018 |>
   remove_axis(axis = "y") +
   remove_ticks()
 ```
+
+Visualize trip duration by weekday vs. weekend with boxplots zoomed to 30 minutes
 
 ```{r}
 citibike_sample_2018 |>
@@ -355,7 +390,7 @@ citibike_sample_2018 |>
   coord_flip(ylim = c(0, 30))
 ```
 
-### Randomization test: Mean trip duration on weekdays vs. weekends
+#### Randomization test: Mean trip duration on weekdays vs. weekends
 
 Calculate observed difference in means
 
@@ -382,24 +417,36 @@ null_distribution <- citibike_sample_2018 |>
 Visualize null distribution with observed statistic
 
 ```{r}
-null_distribution |>
+rdm_dmeans_weekpart <-
+  null_distribution |>
   visualize() +
   shade_p_value(obs_stat = obs_diff$stat, direction = "two_sided") +
-  labs(
-    title = "Null Distribution of Mean Trip Duration Difference",
-    x = "Difference in Mean Trip Duration (Weekend - Weekday)",
-    y = "Frequency"
-  ) +
+  labs(title = "Null Distribution of Mean Trip Duration Difference", x = "Difference in Mean Trip Duration (Weekend - Weekday)", y = "Frequency") +
   remove_axis(axis = "y") +
   remove_ticks()
+
+rdm_dmeans_weekpart
+
+ggsave(
+  filename = "images/citibike_rdm_dmeans_weekpart.png",
+  plot = rdm_dmeans_weekpart,
+  width = 6,
+  height = 4,
+  units = "in",
+  dpi = 600
+)
 ```
+
+Calculate p-value from randomization test
 
 ```{r}
 null_distribution |>
   get_p_value(obs_stat = obs_diff$stat, direction = "two-sided")
 ```
 
-### Mathematical two-sample t-test: Mean trip duration on weekdays vs. weekends
+#### Mathematical two-sample t-test: Mean trip duration on weekdays vs. weekends
+
+Perform two-sample t-test
 
 ```{r}
 citibike_sample_2018 |>
@@ -408,7 +455,9 @@ citibike_sample_2018 |>
   tidy()
 ```
 
-### Comparison of randomization test and t-test results
+#### Comparison of randomization test and t-test results
+
+Compare population difference, randomization test result, and t-test result
 
 ```{r}
 true_diff <- citibike_2018 |>
@@ -427,22 +476,33 @@ t_test_result <- citibike_sample_2018 |>
   (\(x) t.test(tripduration_min ~ weekday_weekend, data = x, var.equal = FALSE))() |>
   tidy()
 
-tibble(
-  Method = c("Population (True)", "Randomization Test", "T-test"),
-  Difference = c(
-    true_diff,
-    obs_diff$stat,
-    t_test_result$estimate
-  ),
-  P_Value = c(
-    NA,
-    randomization_result,
-    t_test_result$p.value
-  )
-)
+rdm_dmeans_weekpart_table <-
+  tibble(
+    Method = c("Population (True)", "Randomization Test", "T-test"),
+    Difference = c(true_diff, obs_diff$stat, t_test_result$estimate),
+    P_Value = c(NA, randomization_result, t_test_result$p.value)
+  ) |>
+  kable(digits = 4) |>
+  kable_styling(full_width = FALSE,
+                font_size = 14,
+                html_font = "Lato")
+
+rdm_dmeans_weekpart_table
 ```
 
-### Bivariate analysis: Trip duration by user type
+```{r}
+#| eval: false
+#| echo: false
+
+save_kable(rdm_dmeans_weekpart_table,
+           file = "images/citibike_rdm_dmeans_weekpart_table.png",
+           zoom = 8,
+           density = 600)
+```
+
+### Inference for difference in median trip duration by user type
+
+#### Bivariate analysis
 
 ```{r}
 citibike_sample_2018 |>
@@ -493,6 +553,9 @@ citibike_sample_2018 |>
   ) +
   coord_flip()
 ```
+#### Randomization test: Median trip duration by user type
+
+Calculate observed difference in medians
 
 ```{r}
 obs_diff_median <- citibike_sample_2018 |>
@@ -501,6 +564,8 @@ obs_diff_median <- citibike_sample_2018 |>
 
 obs_diff_median
 ```
+
+Generate null distribution through permutation
 
 ```{r}
 set.seed(557)
@@ -511,6 +576,8 @@ null_distribution_median <- citibike_sample_2018 |>
   generate(reps = 1000, type = "permute") |>
   calculate(stat = "diff in medians", order = c("Customer", "Subscriber"))
 ```
+
+Visualize null distribution with observed statistic
 
 ```{r}
 null_distribution_median |>
@@ -523,10 +590,16 @@ null_distribution_median |>
   )
 ```
 
+Calculate p-value from randomization test
+
 ```{r}
 null_distribution_median |>
   get_p_value(obs_stat = obs_diff_median, direction = "two-sided")
 ```
+
+#### Wilcoxon rank sum test: Median trip duration by user type
+
+Perform Wilcoxon rank sum test
 
 ```{r}
 wilcox.test(tripduration_min ~ usertype,
@@ -534,6 +607,10 @@ wilcox.test(tripduration_min ~ usertype,
             exact = FALSE) |>
   tidy()
 ```
+
+#### Comparison of randomization test and Wilcoxon test results
+
+Compare population difference, randomization test result, and Wilcoxon test result
 
 ```{r}
 true_diff_median <- citibike_2018 |>
@@ -567,6 +644,10 @@ tibble(
 )
 ```
 
+### Additional exploratory analyses
+
+Consider trip duration by time of day
+
 ```{r}
 citibike_sample_2018 |>
   ggplot(aes(x = time_of_day, y = tripduration_min, fill = time_of_day)) +
@@ -588,10 +669,14 @@ citibike_sample_2018 |>
   coord_flip(ylim = c(0, 30))
 ```
 
+Conduct ANOVA to test for differences in mean trip duration by time of day
+
 ```{r}
 aov(tripduration_min ~ time_of_day, data = citibike_sample_2018) |>
   tidy()
 ```
+
+Consider trip volume by hour of day and user type
 
 ```{r}
 citibike_sample_2018 |>
@@ -626,6 +711,8 @@ ggsave(
 )
 ```
 
+Consider trip volume by day of week and user type
+
 ```{r}
 citibike_sample_2018 |>
   count(day_of_week, usertype) |>
@@ -649,6 +736,8 @@ citibike_sample_2018 |>
   theme(legend.position = "none") +
   coord_cartesian(clip = "off")
 ```
+
+Consider trip volume by month and user type
 
 ```{r}
 citibike_sample_2018 |>
@@ -674,6 +763,8 @@ citibike_sample_2018 |>
   coord_cartesian(clip = "off")
 ```
 
+Consider relationship between trip duration and user age
+
 ```{r}
 citibike_sample_2018 |>
   ggplot(aes(x = approx_age, y = tripduration_min)) +
@@ -685,6 +776,8 @@ citibike_sample_2018 |>
   ) +
   scatter_grid()
 ```
+
+Zoom in on relationship between trip duration and user age for trips up to 60 minutes
 
 ```{r}
 citibike_sample_2018 |>
@@ -699,11 +792,15 @@ citibike_sample_2018 |>
   scatter_grid()
 ```
 
+Calculate correlation between trip duration and user age
+
 ```{r}
 cor.test(citibike_sample_2018$approx_age, 
          citibike_sample_2018$tripduration_min) |>
   tidy()
 ```
+
+Consider user demographics by user type
 
 ```{r}
 citibike_sample_2018 |>
@@ -716,12 +813,16 @@ citibike_sample_2018 |>
   )
 ```
 
+Conduct chi-square test for independence between user type and gender
+
 ```{r}
 chisq.test(citibike_sample_2018$usertype, citibike_sample_2018$gender) |>
   tidy()
 ```
 
-### Popular start stations
+#### Popular start stations
+
+Identify top 10 most popular start stations
 
 ```{r}
 citibike_sample_2018 |>
@@ -734,7 +835,7 @@ citibike_sample_2018 |>
        x = "", y = "Number of Trips")
 ```
 
-### Map of start stations by trip volume
+Map of start stations sized by trip volume
 
 ```{r}
 station_counts <- citibike_sample_2018 |>
@@ -766,7 +867,9 @@ leaflet(station_counts) |>
   )
 ```
 
-### Popular end stations
+#### Popular end stations
+
+Identify top 10 most popular end stations
 
 ```{r}
 citibike_sample_2018 |>
@@ -780,7 +883,9 @@ citibike_sample_2018 |>
        x = "", y = "Number of Trips")
 ```
 
-### Map of popular start and end stations
+#### Map of popular start and end stations
+
+Show combined map of top 10 start and end stations
 
 ```{r}
 start_counts <- citibike_sample_2018 |>

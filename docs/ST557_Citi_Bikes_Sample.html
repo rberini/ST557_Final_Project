@@ -200,17 +200,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="data-loading-and-preparation">Data Loading and Preparation</h2>
 <p>Load required packages</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(conflicted) <span class="co">#for managing function name conflicts</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co">#for data manipulation and visualization</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co">#for data cleaning and nicer tables</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(urbnthemes) <span class="co">#for urban institute chart styles</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom) <span class="co">#for tidying statistical test outputs</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr) <span class="co">#for enhanced data summaries</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych) <span class="co">#for descriptive statistics</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer) <span class="co">#for simulation-based inference</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet) <span class="co">#for interactive maps</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr) <span class="co">#for enhanced markdown rendering</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra) <span class="co">#for enhanced table formatting</span></span>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(conflicted)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(urbnthemes)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">conflicts_prefer</span>(</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span>filter,</span>
@@ -270,6 +270,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Female, Female, Male, Ma
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory data analysis</h2>
 <section id="summary-statistics" class="level3">
 <h3 class="anchored" data-anchor-id="summary-statistics">Summary statistics</h3>
+<p>Produce summary statistics on sample data</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -332,6 +333,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Female, Female, Male, Ma
               </code></pre>
 </div>
 </div>
+<p>Conduct enhanced skim summary</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">skim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -753,6 +755,7 @@ $ gender                  &lt;fct&gt; Male, Male, Male, Female, Female, Male, Ma
 </table>
 </div>
 </div>
+<p>Consider key numerical variables by user type</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(tripduration_min, approx_age)) <span class="sc">|&gt;</span></span>
@@ -778,8 +781,11 @@ approx_age       0.81    -0.38  1.77</code></pre>
 </div>
 </div>
 </section>
-<section id="trip-duration-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="trip-duration-analysis">Trip duration analysis</h3>
+<section id="inference-for-trip-duration-mean" class="level3">
+<h3 class="anchored" data-anchor-id="inference-for-trip-duration-mean">Inference for trip duration mean</h3>
+<section id="trip-duration-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="trip-duration-analysis">Trip duration analysis</h4>
+<p>Conduct univariate analysis of trip duration</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(tripduration_min) <span class="sc">|&gt;</span></span>
@@ -791,6 +797,7 @@ tripduration_min    1 1000 12.48 17.38   9.22   10.41 6.52 1.02 445.85 444.83
 tripduration_min 16.52   389.84 0.55</code></pre>
 </div>
 </div>
+<p>Consider distribution of trip duration</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> tripduration_min)) <span class="sc">+</span></span>
@@ -810,6 +817,7 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 </div>
 </div>
 </div>
+<p>Zoom in on distribution of trip duration up to 60 minutes</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> tripduration_min)) <span class="sc">+</span></span>
@@ -831,8 +839,9 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 </div>
 </div>
 </section>
-<section id="bootstrap-confidence-interval-for-mean-trip-duration" class="level3">
-<h3 class="anchored" data-anchor-id="bootstrap-confidence-interval-for-mean-trip-duration">Bootstrap confidence interval for mean trip duration</h3>
+<section id="bootstrap-confidence-interval-for-mean-trip-duration" class="level4">
+<h4 class="anchored" data-anchor-id="bootstrap-confidence-interval-for-mean-trip-duration">Bootstrap confidence interval for mean trip duration</h4>
+<p>Check mean trip duration in sample</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">557</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -844,6 +853,7 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 <pre><code>[1] 12.56418</code></pre>
 </div>
 </div>
+<p>Generate a single bootstrap sample, calculate mean trip duration, and plot statistic</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">557</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -881,9 +891,10 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">4</span>,</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">600</span></span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Generate ten bootstrap samples, calculate mean trip duration, and plot statistic</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">557</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -930,9 +941,10 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">4</span>,</span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">600</span></span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Generate 1000 bootstrap samples, calculate mean trip duration, and plot statistic</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">557</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -962,9 +974,10 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">4</span>,</span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">600</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Calculate 95% bootstrap confidence interval for mean trip duration and visualize</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>boot_ci <span class="ot">&lt;-</span> boot_dist_1000 <span class="sc">|&gt;</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_confidence_interval</span>(<span class="at">level =</span> <span class="fl">0.95</span>, <span class="at">type =</span> <span class="st">"percentile"</span>)</span>
@@ -997,12 +1010,13 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">4</span>,</span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">600</span></span>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="mathematical-confidence-interval-for-mean-trip-duration" class="level3">
-<h3 class="anchored" data-anchor-id="mathematical-confidence-interval-for-mean-trip-duration">Mathematical confidence interval for mean trip duration</h3>
+<section id="mathematical-confidence-interval-for-mean-trip-duration" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-confidence-interval-for-mean-trip-duration">Mathematical confidence interval for mean trip duration</h4>
+<p>Perform t-test to calculate 95% confidence interval mathematically</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(tripduration_min) <span class="sc">|&gt;</span></span>
@@ -1017,8 +1031,9 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 </div>
 </div>
 </section>
-<section id="comparison-of-bootstrap-and-mathematical-confidence-intervals" class="level3">
-<h3 class="anchored" data-anchor-id="comparison-of-bootstrap-and-mathematical-confidence-intervals">Comparison of bootstrap and mathematical confidence intervals</h3>
+<section id="comparison-of-bootstrap-and-mathematical-confidence-intervals" class="level4">
+<h4 class="anchored" data-anchor-id="comparison-of-bootstrap-and-mathematical-confidence-intervals">Comparison of bootstrap and mathematical confidence intervals</h4>
+<p>Compare population mean, bootstrap mean and CI, and t-test mean and CI</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pop_mean <span class="ot">&lt;-</span> <span class="fu">mean</span>(citibike_2018<span class="sc">$</span>tripduration_min, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1078,8 +1093,12 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 </div>
 </div>
 </section>
-<section id="bivariate-analysis-trip-duration-by-weekday-vs.-weekend" class="level3">
-<h3 class="anchored" data-anchor-id="bivariate-analysis-trip-duration-by-weekday-vs.-weekend">Bivariate analysis: Trip duration by weekday vs.&nbsp;weekend</h3>
+</section>
+<section id="inference-for-difference-in-mean-trip-duration-by-weekday-vs.-weekend" class="level3">
+<h3 class="anchored" data-anchor-id="inference-for-difference-in-mean-trip-duration-by-weekday-vs.-weekend">Inference for difference in mean trip duration by weekday vs.&nbsp;weekend</h3>
+<section id="bivariate-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="bivariate-analysis">Bivariate analysis</h4>
+<p>Consider distribution of trip duration by weekday vs.&nbsp;weekend zoomed to 60 minutes</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> tripduration_min, <span class="at">fill =</span> weekday_weekend)) <span class="sc">+</span></span>
@@ -1101,6 +1120,7 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 </div>
 </div>
 </div>
+<p>Visualize trip duration by weekday vs.&nbsp;weekend with boxplots zoomed to 30 minutes</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> weekday_weekend, <span class="at">y =</span> tripduration_min, <span class="at">fill =</span> weekday_weekend)) <span class="sc">+</span></span>
@@ -1129,8 +1149,8 @@ tripduration_min 16.52   389.84 0.55</code></pre>
 </div>
 </div>
 </section>
-<section id="randomization-test-mean-trip-duration-on-weekdays-vs.-weekends" class="level3">
-<h3 class="anchored" data-anchor-id="randomization-test-mean-trip-duration-on-weekdays-vs.-weekends">Randomization test: Mean trip duration on weekdays vs.&nbsp;weekends</h3>
+<section id="randomization-test-mean-trip-duration-on-weekdays-vs.-weekends" class="level4">
+<h4 class="anchored" data-anchor-id="randomization-test-mean-trip-duration-on-weekdays-vs.-weekends">Randomization test: Mean trip duration on weekdays vs.&nbsp;weekends</h4>
 <p>Calculate observed difference in means</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>obs_diff <span class="ot">&lt;-</span> citibike_sample_2018 <span class="sc">|&gt;</span></span>
@@ -1159,16 +1179,15 @@ Explanatory: weekday_weekend (factor)
 </div>
 <p>Visualize null distribution with observed statistic</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>null_distribution <span class="sc">|&gt;</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> obs_diff<span class="sc">$</span>stat, <span class="at">direction =</span> <span class="st">"two_sided"</span>) <span class="sc">+</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Null Distribution of Mean Trip Duration Difference"</span>,</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Difference in Mean Trip Duration (Weekend - Weekday)"</span>,</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Frequency"</span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">remove_axis</span>(<span class="at">axis =</span> <span class="st">"y"</span>) <span class="sc">+</span></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">remove_ticks</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>rdm_dmeans_weekpart <span class="ot">&lt;-</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  null_distribution <span class="sc">|&gt;</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">shade_p_value</span>(<span class="at">obs_stat =</span> obs_diff<span class="sc">$</span>stat, <span class="at">direction =</span> <span class="st">"two_sided"</span>) <span class="sc">+</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Null Distribution of Mean Trip Duration Difference"</span>, <span class="at">x =</span> <span class="st">"Difference in Mean Trip Duration (Weekend - Weekday)"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">remove_axis</span>(<span class="at">axis =</span> <span class="st">"y"</span>) <span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">remove_ticks</span>()</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>rdm_dmeans_weekpart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1176,10 +1195,19 @@ Explanatory: weekday_weekend (factor)
 </figure>
 </div>
 </div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"images/citibike_rdm_dmeans_weekpart.png"</span>,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> rdm_dmeans_weekpart,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">4</span>,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">units =</span> <span class="st">"in"</span>,</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">600</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Calculate p-value from randomization test</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>null_distribution <span class="sc">|&gt;</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff<span class="sc">$</span>stat, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>null_distribution <span class="sc">|&gt;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff<span class="sc">$</span>stat, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
   p_value
@@ -1188,13 +1216,14 @@ Explanatory: weekday_weekend (factor)
 </div>
 </div>
 </section>
-<section id="mathematical-two-sample-t-test-mean-trip-duration-on-weekdays-vs.-weekends" class="level3">
-<h3 class="anchored" data-anchor-id="mathematical-two-sample-t-test-mean-trip-duration-on-weekdays-vs.-weekends">Mathematical two-sample t-test: Mean trip duration on weekdays vs.&nbsp;weekends</h3>
+<section id="mathematical-two-sample-t-test-mean-trip-duration-on-weekdays-vs.-weekends" class="level4">
+<h4 class="anchored" data-anchor-id="mathematical-two-sample-t-test-mean-trip-duration-on-weekdays-vs.-weekends">Mathematical two-sample t-test: Mean trip duration on weekdays vs.&nbsp;weekends</h4>
+<p>Perform two-sample t-test</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday_weekend =</span> <span class="fu">fct_relevel</span>(weekday_weekend, <span class="st">"Weekend"</span>, <span class="st">"Weekday"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  (\(x) <span class="fu">t.test</span>(tripduration_min <span class="sc">~</span> weekday_weekend, <span class="at">data =</span> x, <span class="at">var.equal =</span> <span class="cn">FALSE</span>))() <span class="sc">|&gt;</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday_weekend =</span> <span class="fu">fct_relevel</span>(weekday_weekend, <span class="st">"Weekend"</span>, <span class="st">"Weekday"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  (\(x) <span class="fu">t.test</span>(tripduration_min <span class="sc">~</span> weekday_weekend, <span class="at">data =</span> x, <span class="at">var.equal =</span> <span class="cn">FALSE</span>))() <span class="sc">|&gt;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
      estimate   estimate1   estimate2   statistic      p.value   parameter
@@ -1205,50 +1234,75 @@ Explanatory: weekday_weekend (factor)
 </div>
 </div>
 </section>
-<section id="comparison-of-randomization-test-and-t-test-results" class="level3">
-<h3 class="anchored" data-anchor-id="comparison-of-randomization-test-and-t-test-results">Comparison of randomization test and t-test results</h3>
+<section id="comparison-of-randomization-test-and-t-test-results" class="level4">
+<h4 class="anchored" data-anchor-id="comparison-of-randomization-test-and-t-test-results">Comparison of randomization test and t-test results</h4>
+<p>Compare population difference, randomization test result, and t-test result</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>true_diff <span class="ot">&lt;-</span> citibike_2018 <span class="sc">|&gt;</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(weekday_weekend) <span class="sc">|&gt;</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_duration =</span> <span class="fu">mean</span>(tripduration_min, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">diff =</span> <span class="fu">diff</span>(mean_duration)) <span class="sc">|&gt;</span></span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(diff)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>randomization_result <span class="ot">&lt;-</span></span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>  null_distribution <span class="sc">|&gt;</span></span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff<span class="sc">$</span>stat, <span class="at">direction =</span> <span class="st">"two-sided"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(p_value)</span>
-<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>t_test_result <span class="ot">&lt;-</span> citibike_sample_2018 <span class="sc">|&gt;</span></span>
-<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday_weekend =</span> <span class="fu">fct_relevel</span>(weekday_weekend, <span class="st">"Weekend"</span>, <span class="st">"Weekday"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  (\(x) <span class="fu">t.test</span>(tripduration_min <span class="sc">~</span> weekday_weekend, <span class="at">data =</span> x, <span class="at">var.equal =</span> <span class="cn">FALSE</span>))() <span class="sc">|&gt;</span></span>
-<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span>
-<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"Population (True)"</span>, <span class="st">"Randomization Test"</span>, <span class="st">"T-test"</span>),</span>
-<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">Difference =</span> <span class="fu">c</span>(</span>
-<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a>    true_diff,</span>
-<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a>    obs_diff<span class="sc">$</span>stat,</span>
-<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a>    t_test_result<span class="sc">$</span>estimate</span>
-<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">P_Value =</span> <span class="fu">c</span>(</span>
-<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a>    <span class="cn">NA</span>,</span>
-<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a>    randomization_result,</span>
-<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a>    t_test_result<span class="sc">$</span>p.value</span>
-<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  Method              Difference       P_Value
-  &lt;chr&gt;                    &lt;dbl&gt;         &lt;dbl&gt;
-1 Population (True)  1.750170423 NA           
-2 Randomization Test 2.181183533  0.156       
-3 T-test             2.181183533  0.2961176552</code></pre>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>true_diff <span class="ot">&lt;-</span> citibike_2018 <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(weekday_weekend) <span class="sc">|&gt;</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_duration =</span> <span class="fu">mean</span>(tripduration_min, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">diff =</span> <span class="fu">diff</span>(mean_duration)) <span class="sc">|&gt;</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(diff)</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>randomization_result <span class="ot">&lt;-</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  null_distribution <span class="sc">|&gt;</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff<span class="sc">$</span>stat, <span class="at">direction =</span> <span class="st">"two-sided"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(p_value)</span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>t_test_result <span class="ot">&lt;-</span> citibike_sample_2018 <span class="sc">|&gt;</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">weekday_weekend =</span> <span class="fu">fct_relevel</span>(weekday_weekend, <span class="st">"Weekend"</span>, <span class="st">"Weekday"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  (\(x) <span class="fu">t.test</span>(tripduration_min <span class="sc">~</span> weekday_weekend, <span class="at">data =</span> x, <span class="at">var.equal =</span> <span class="cn">FALSE</span>))() <span class="sc">|&gt;</span></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>rdm_dmeans_weekpart_table <span class="ot">&lt;-</span></span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">Method =</span> <span class="fu">c</span>(<span class="st">"Population (True)"</span>, <span class="st">"Randomization Test"</span>, <span class="st">"T-test"</span>),</span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">Difference =</span> <span class="fu">c</span>(true_diff, obs_diff<span class="sc">$</span>stat, t_test_result<span class="sc">$</span>estimate),</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">P_Value =</span> <span class="fu">c</span>(<span class="cn">NA</span>, randomization_result, t_test_result<span class="sc">$</span>p.value)</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">digits =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">font_size =</span> <span class="dv">14</span>,</span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>                <span class="at">html_font =</span> <span class="st">"Lato"</span>)</span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>rdm_dmeans_weekpart_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Method</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Difference</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">P_Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Population (True)</td>
+<td style="text-align: right;">1.7502</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Randomization Test</td>
+<td style="text-align: right;">2.1812</td>
+<td style="text-align: right;">0.1560</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">T-test</td>
+<td style="text-align: right;">2.1812</td>
+<td style="text-align: right;">0.2961</td>
+</tr>
+</tbody>
+</table>
+
+
 </div>
 </div>
 </section>
-<section id="bivariate-analysis-trip-duration-by-user-type" class="level3">
-<h3 class="anchored" data-anchor-id="bivariate-analysis-trip-duration-by-user-type">Bivariate analysis: Trip duration by user type</h3>
+</section>
+<section id="inference-for-difference-in-median-trip-duration-by-user-type" class="level3">
+<h3 class="anchored" data-anchor-id="inference-for-difference-in-median-trip-duration-by-user-type">Inference for difference in median trip duration by user type</h3>
+<section id="bivariate-analysis-1" class="level4">
+<h4 class="anchored" data-anchor-id="bivariate-analysis-1">Bivariate analysis</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> tripduration_min, <span class="at">fill =</span> usertype)) <span class="sc">+</span></span>
@@ -1265,7 +1319,7 @@ Explanatory: weekday_weekend (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1292,7 +1346,7 @@ Explanatory: weekday_weekend (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1312,11 +1366,15 @@ Explanatory: weekday_weekend (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+</section>
+<section id="randomization-test-median-trip-duration-by-user-type" class="level4">
+<h4 class="anchored" data-anchor-id="randomization-test-median-trip-duration-by-user-type">Randomization test: Median trip duration by user type</h4>
+<p>Calculate observed difference in medians</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>obs_diff_median <span class="ot">&lt;-</span> citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">specify</span>(tripduration_min <span class="sc">~</span> usertype) <span class="sc">|&gt;</span></span>
@@ -1332,6 +1390,7 @@ Explanatory: usertype (factor)
 1 8.833333333</code></pre>
 </div>
 </div>
+<p>Generate null distribution through permutation</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">557</span>)</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -1341,6 +1400,7 @@ Explanatory: usertype (factor)
 <span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">generate</span>(<span class="at">reps =</span> <span class="dv">1000</span>, <span class="at">type =</span> <span class="st">"permute"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">calculate</span>(<span class="at">stat =</span> <span class="st">"diff in medians"</span>, <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"Customer"</span>, <span class="st">"Subscriber"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Visualize null distribution with observed statistic</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>null_distribution_median <span class="sc">|&gt;</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">visualize</span>() <span class="sc">+</span></span>
@@ -1353,11 +1413,12 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Calculate p-value from randomization test</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>null_distribution_median <span class="sc">|&gt;</span></span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">get_p_value</span>(<span class="at">obs_stat =</span> obs_diff_median, <span class="at">direction =</span> <span class="st">"two-sided"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1368,6 +1429,10 @@ Explanatory: usertype (factor)
 1       0</code></pre>
 </div>
 </div>
+</section>
+<section id="wilcoxon-rank-sum-test-median-trip-duration-by-user-type" class="level4">
+<h4 class="anchored" data-anchor-id="wilcoxon-rank-sum-test-median-trip-duration-by-user-type">Wilcoxon rank sum test: Median trip duration by user type</h4>
+<p>Perform Wilcoxon rank sum test</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(tripduration_min <span class="sc">~</span> usertype,</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data =</span> citibike_sample_2018,</span>
@@ -1380,6 +1445,10 @@ Explanatory: usertype (factor)
 1    9961.5 1.148162973e-9 Wilcoxon rank sum test with continuity c… two.sided  </code></pre>
 </div>
 </div>
+</section>
+<section id="comparison-of-randomization-test-and-wilcoxon-test-results" class="level4">
+<h4 class="anchored" data-anchor-id="comparison-of-randomization-test-and-wilcoxon-test-results">Comparison of randomization test and Wilcoxon test results</h4>
+<p>Compare population difference, randomization test result, and Wilcoxon test result</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>true_diff_median <span class="ot">&lt;-</span> citibike_2018 <span class="sc">|&gt;</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(usertype) <span class="sc">|&gt;</span></span>
@@ -1419,6 +1488,11 @@ Explanatory: usertype (factor)
 3 Wilcoxon Test       8.833333333  1.148162973e-9</code></pre>
 </div>
 </div>
+</section>
+</section>
+<section id="additional-exploratory-analyses" class="level3">
+<h3 class="anchored" data-anchor-id="additional-exploratory-analyses">Additional exploratory analyses</h3>
+<p>Consider trip duration by time of day</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> time_of_day, <span class="at">y =</span> tripduration_min, <span class="at">fill =</span> time_of_day)) <span class="sc">+</span></span>
@@ -1441,11 +1515,12 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Conduct ANOVA to test for differences in mean trip duration by time of day</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">aov</span>(tripduration_min <span class="sc">~</span> time_of_day, <span class="at">data =</span> citibike_sample_2018) <span class="sc">|&gt;</span></span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1457,6 +1532,7 @@ Explanatory: usertype (factor)
 2 Residuals     995 299468.4979   300.9733647 NA           NA           </code></pre>
 </div>
 </div>
+<p>Consider trip volume by hour of day and user type</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(hour_of_day, usertype) <span class="sc">|&gt;</span></span>
@@ -1483,7 +1559,7 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1495,6 +1571,7 @@ Explanatory: usertype (factor)
 <span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
 <span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Consider trip volume by day of week and user type</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(day_of_week, usertype) <span class="sc">|&gt;</span></span>
@@ -1520,11 +1597,12 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Consider trip volume by month and user type</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(month, usertype) <span class="sc">|&gt;</span></span>
@@ -1550,11 +1628,12 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Consider relationship between trip duration and user age</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> approx_age, <span class="at">y =</span> tripduration_min)) <span class="sc">+</span></span>
@@ -1568,11 +1647,12 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Zoom in on relationship between trip duration and user age for trips up to 60 minutes</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tripduration_min <span class="sc">&lt;=</span> <span class="dv">60</span>) <span class="sc">|&gt;</span></span>
@@ -1587,11 +1667,12 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Calculate correlation between trip duration and user age</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(citibike_sample_2018<span class="sc">$</span>approx_age, </span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>         citibike_sample_2018<span class="sc">$</span>tripduration_min) <span class="sc">|&gt;</span></span>
@@ -1604,6 +1685,7 @@ Explanatory: usertype (factor)
 # ℹ 3 more variables: conf.high &lt;dbl&gt;, method &lt;chr&gt;, alternative &lt;chr&gt;</code></pre>
 </div>
 </div>
+<p>Consider user demographics by user type</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(usertype, gender) <span class="sc">|&gt;</span></span>
@@ -1623,6 +1705,7 @@ Explanatory: usertype (factor)
 4 Customer   Female    20 33.3                30</code></pre>
 </div>
 </div>
+<p>Conduct chi-square test for independence between user type and gender</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chisq.test</span>(citibike_sample_2018<span class="sc">$</span>usertype, citibike_sample_2018<span class="sc">$</span>gender) <span class="sc">|&gt;</span></span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1633,9 +1716,9 @@ Explanatory: usertype (factor)
 1 10.04440784 1.528111163e-3         1 Pearson's Chi-squared test with Yates' c…</code></pre>
 </div>
 </div>
-</section>
-<section id="popular-start-stations" class="level3">
-<h3 class="anchored" data-anchor-id="popular-start-stations">Popular start stations</h3>
+<section id="popular-start-stations" class="level4">
+<h4 class="anchored" data-anchor-id="popular-start-stations">Popular start stations</h4>
+<p>Identify top 10 most popular start stations</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(start_station_name, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
@@ -1648,14 +1731,12 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="map-of-start-stations-by-trip-volume" class="level3">
-<h3 class="anchored" data-anchor-id="map-of-start-stations-by-trip-volume">Map of start stations by trip volume</h3>
+<p>Map of start stations sized by trip volume</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>station_counts <span class="ot">&lt;-</span> citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(start_station_name, start_station_latitude, start_station_longitude) <span class="sc">|&gt;</span></span>
@@ -1690,8 +1771,9 @@ Explanatory: usertype (factor)
 </div>
 </div>
 </section>
-<section id="popular-end-stations" class="level3">
-<h3 class="anchored" data-anchor-id="popular-end-stations">Popular end stations</h3>
+<section id="popular-end-stations" class="level4">
+<h4 class="anchored" data-anchor-id="popular-end-stations">Popular end stations</h4>
+<p>Identify top 10 most popular end stations</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(end_station_name, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
@@ -1705,14 +1787,15 @@ Explanatory: usertype (factor)
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="ST557_Citi_Bikes_Sample_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="map-of-popular-start-and-end-stations" class="level3">
-<h3 class="anchored" data-anchor-id="map-of-popular-start-and-end-stations">Map of popular start and end stations</h3>
+<section id="map-of-popular-start-and-end-stations" class="level4">
+<h4 class="anchored" data-anchor-id="map-of-popular-start-and-end-stations">Map of popular start and end stations</h4>
+<p>Show combined map of top 10 start and end stations</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>start_counts <span class="ot">&lt;-</span> citibike_sample_2018 <span class="sc">|&gt;</span></span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(start_station_name, start_station_latitude, start_station_longitude) <span class="sc">|&gt;</span></span>
@@ -1760,6 +1843,7 @@ Explanatory: usertype (factor)
 </div>
 
 
+</section>
 </section>
 </section>
 
