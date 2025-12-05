@@ -553,6 +553,7 @@ citibike_sample_2018 |>
   ) +
   coord_flip()
 ```
+
 #### Randomization test: Median trip duration by user type
 
 Calculate observed difference in medians

@@ -39,13 +39,13 @@ The data for this analysis is sourced from the Citi Bike system's public data re
 Load required packages
 
 ```{r}
-library(conflicted) #for managing function name conflicts
-library(tidyverse) #for data manipulation and visualization
-library(fs) #for file system operations
-library(vroom) #for fast data reading
-library(janitor) #for data cleaning and nicer tables
-library(urbnthemes) #for urban institute chart styles
-library(skimr) #for enhanced data summaries
+library(conflicted)
+library(tidyverse)
+library(fs)
+library(vroom)
+library(janitor)
+library(urbnthemes)
+library(skimr)
 
 conflicts_prefer(dplyr::filter)
 
